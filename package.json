@@ -1,0 +1,13 @@
+{
+  "name": "lifex-project-gallery",
+  "version": "2.0.0",
+  "description": "Build tooling for the LifeX Project Gallery WordPress plugin.",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i ./assets/src/app.css -o ./assets/css/lifex-project-gallery.css --minify",
+    "dev":   "tailwindcss -i ./assets/src/app.css -o ./assets/css/lifex-project-gallery.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

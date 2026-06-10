@@ -1,0 +1,123 @@
+/*
+ * Tailwind source for lifex-project-gallery.
+ * This file is the source of truth for the compiled stylesheet.
+ *
+ * Build: npm run build
+ * Watch: npm run dev
+ *
+ * The compiled output lands at assets/css/lifex-project-gallery.css.
+ * Preflight is disabled so the plugin does not reset global browser styles.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Custom properties defined here are picked up by @tailwind base.
+ * Component-level styles that need @apply are defined below.
+ */
+
+@layer base {
+  :root {
+    --lxpg-font:            inherit;
+    --lxpg-radius:          4px;
+    --lxpg-card-ratio:      3 / 2;
+    --lxpg-card-overlay-bg: rgba(0, 0, 0, 0.62);
+    --lxpg-card-text:       #ffffff;
+    --lxpg-grid-gap:        1rem;
+    --lxpg-filter-border:   #d1d5db;
+    --lxpg-filter-bg:       #ffffff;
+    --lxpg-filter-text:     #1f2937;
+    --lxpg-filter-focus:    #111827;
+    --lxpg-btn-bg:          #1f2937;
+    --lxpg-btn-text:        #ffffff;
+    --lxpg-btn-hover-bg:    #374151;
+    --lxpg-cta-bg:          #1f2937;
+    --lxpg-cta-text:        #ffffff;
+    --lxpg-cta-btn-bg:      #ffffff;
+    --lxpg-cta-btn-text:    #1f2937;
+    --lxpg-share-bg:        #4b5563;
+    --lxpg-share-hover-bg:  #1f2937;
+    --lxpg-lb-bg:           rgba(0, 0, 0, 0.92);
+    --lxpg-lb-text:         #ffffff;
+  }
+}
+
+@layer components {
+  .lxpg-sr-only {
+    @apply sr-only;
+  }
+
+  .lxpg-gallery,
+  .lxpg-single {
+    font-family: var(--lxpg-font);
+  }
+
+  /* Filter bar */
+  .lxpg-filters {
+    @apply flex flex-wrap gap-3 items-end mb-8;
+  }
+
+  .lxpg-filter-select {
+    @apply appearance-none bg-white border border-gray-300 rounded text-sm
+           py-2 pl-3 pr-9 cursor-pointer min-w-40
+           focus:outline-none focus:ring-2 focus:ring-gray-900;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1rem;
+  }
+
+  .lxpg-filter-btn {
+    @apply bg-gray-900 text-white text-sm font-medium
+           py-2 px-5 rounded cursor-pointer border-0
+           hover:bg-gray-700 transition-colors duration-200
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900;
+  }
+
+  /* Grid */
+  .lxpg-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+    gap: var(--lxpg-grid-gap);
+  }
+
+  /* Card */
+  .lxpg-card-link {
+    @apply block no-underline text-inherit;
+  }
+
+  .lxpg-card-image-wrap {
+    @apply relative overflow-hidden bg-gray-200;
+    aspect-ratio: var(--lxpg-card-ratio);
+  }
+
+  .lxpg-card-image {
+    @apply w-full h-full object-cover block transition-transform duration-500 ease-in-out;
+  }
+
+  .lxpg-card-link:hover .lxpg-card-image,
+  .lxpg-card-link:focus-visible .lxpg-card-image {
+    @apply scale-105;
+  }
+
+  .lxpg-card-overlay {
+    @apply absolute inset-0 flex items-end p-4 transition-colors duration-300;
+    background-color: transparent;
+  }
+
+  .lxpg-card-link:hover .lxpg-card-overlay,
+  .lxpg-card-link:focus-visible .lxpg-card-overlay {
+    background-color: var(--lxpg-card-overlay-bg);
+  }
+
+  .lxpg-card-meta {
+    @apply opacity-0 translate-y-2 transition-all duration-300;
+    color: var(--lxpg-card-text);
+  }
+
+  .lxpg-card-link:hover .lxpg-card-meta,
+  .lxpg-card-link:focus-visible .lxpg-card-meta {
+    @apply opacity-100 translate-y-0;
+  }
+}

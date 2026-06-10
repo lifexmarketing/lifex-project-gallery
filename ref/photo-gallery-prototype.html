@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tussey Gallery — Prototype v2</title>
+<style>
+  :root{
+    --green:#2f5233; --green-dk:#1f3a28; --green-li:#4d7c4f;
+    --stone:#efece4; --sand:#e3ddcf; --char:#2e3234; --ink:#23282a;
+    --line:#d9d3c5; --white:#fff; --warn:#b06a1e;
+    --shadow:0 4px 16px rgba(31,58,40,.12);
+    --radius:10px; --maxw:1200px;
+    --sans:"Helvetica Neue",Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone);line-height:1.5;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  .proto{background:var(--green-dk);color:#dfead9;font-size:13px;text-align:center;padding:7px 16px}
+  .proto strong{color:#fff}
+
+  header.masthead{background:var(--green);color:#fff;padding:26px 0 22px}
+  .masthead h1{margin:0;font-size:28px;font-weight:700}
+  .masthead p{margin:6px 0 0;color:#cfe0cb;max-width:660px;font-size:15px}
+  .viewtabs{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap}
+  .viewtabs button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#eaf2e6;
+    padding:8px 16px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:600}
+  .viewtabs button.active{background:#fff;color:var(--green);border-color:#fff}
+
+  .controls{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+  .controls .wrap{padding:14px 20px}
+  .rowmain{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--char);padding:7px 14px;border-radius:999px;
+    cursor:pointer;font-size:13.5px;font-weight:600;white-space:nowrap;text-transform:capitalize}
+  .chip:hover{border-color:var(--green-li);color:var(--green)}
+  .chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+  /* second-tier sub-tag row */
+  .subrow{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+  .subrow .lbl{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:#8a9081;font-weight:700;margin-right:4px}
+  .subchip{border:1px solid var(--line);background:#faf9f5;color:var(--char);padding:5px 11px;border-radius:999px;
+    cursor:pointer;font-size:12.5px;font-weight:600;white-space:nowrap;text-transform:capitalize}
+  .subchip:hover{border-color:var(--green-li);color:var(--green)}
+  .subchip.active{background:var(--green-li);color:#fff;border-color:var(--green-li)}
+  .filt-right{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  select,.search input{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:#fff;color:var(--ink)}
+  .count{font-size:13px;color:#6b7268;width:100%;padding-top:8px}
+
+  main{padding:24px 0 60px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:18px}
+  .card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;border:1px solid var(--line)}
+  .thumb{position:relative;aspect-ratio:4/3;overflow:hidden;background:#cfd8cc}
+  .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+  .card:hover .thumb img{transform:scale(1.06)}
+  .badge{position:absolute;top:10px;left:10px;background:rgba(47,82,51,.92);color:#fff;font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;text-transform:capitalize}
+  .pcount{position:absolute;bottom:10px;right:10px;background:rgba(46,50,52,.85);color:#fff;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:999px}
+  .cap{padding:11px 13px}
+  .cap .t{font-weight:700;font-size:15px;color:var(--ink);line-height:1.25}
+  .cap .l{font-size:12.5px;color:#6b7268;margin-top:3px}
+  .cap .st{margin-top:7px;display:flex;flex-wrap:wrap;gap:4px}
+  .cap .st span{background:var(--sand);border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:11px;text-transform:capitalize}
+
+  .loadwrap{text-align:center;margin-top:22px}
+  .loadmore{background:var(--green);color:#fff;border:none;padding:13px 30px;border-radius:999px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+  .loadmore:hover{background:var(--green-dk)}
+  .loadmore[disabled]{opacity:.4;cursor:default}
+  .empty{padding:40px;text-align:center;color:#6b7268;background:#fff;border:1px dashed var(--line);border-radius:var(--radius)}
+
+  .lb{position:fixed;inset:0;background:rgba(20,28,22,.93);z-index:100;display:none;align-items:center;justify-content:center}
+  .lb.open{display:flex}
+  .lb-img{max-width:84vw;max-height:74vh;border-radius:8px;box-shadow:0 10px 50px rgba(0,0,0,.5);background:#222}
+  .lb-cap{position:absolute;left:0;right:0;bottom:0;padding:18px 22px;color:#fff;background:linear-gradient(to top,rgba(0,0,0,.8),transparent);text-align:center}
+  .lb-cap .t{font-size:19px;font-weight:700}
+  .lb-cap .l{color:#cfe0cb;font-size:13px;margin-top:2px}
+  .lb-cap .ctx{color:#9fb89a;font-size:12px;margin-top:2px}
+  .lb-cap .tags{margin-top:9px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  .lb-cap .tags span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);color:#eaf2e6;font-size:11px;padding:3px 9px;border-radius:999px;text-transform:capitalize}
+  .lb-proj-link{display:inline-block;margin-top:11px;background:#fff;color:var(--green-dk);font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;text-decoration:none}
+  .lb-proj-link:hover{background:#eaf2e6}
+  .lb-x,.lb-nav{position:absolute;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;cursor:pointer;border-radius:50%;width:46px;height:46px;font-size:22px;display:flex;align-items:center;justify-content:center}
+  .lb-x:hover,.lb-nav:hover{background:rgba(255,255,255,.26)}
+  .lb-x{top:18px;right:18px}.lb-nav.prev{left:18px;top:50%;transform:translateY(-50%)}.lb-nav.next{right:18px;top:50%;transform:translateY(-50%)}
+  .lb-counter{position:absolute;top:24px;left:22px;color:#cfe0cb;font-size:13px}
+
+  .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:24px}
+  .panel h2{margin:0 0 4px;font-size:20px;color:var(--green-dk)}
+  .panel .sub{margin:0 0 18px;color:#6b7268;font-size:14px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .fld{display:flex;flex-direction:column;gap:5px}.fld.full{grid-column:1/-1}
+  .fld label{font-size:12.5px;font-weight:700;color:var(--char);text-transform:uppercase;letter-spacing:.04em}
+  .fld input,.fld select,.fld textarea{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fdfdfb}
+  .fld textarea{resize:vertical;min-height:58px}
+  .suggest{align-self:flex-start;background:var(--sand);border:1px solid var(--line);border-radius:7px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--green-dk)}
+  .savebar{margin-top:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .savebtn{background:var(--green);color:#fff;border:none;padding:11px 24px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer}
+  .note{font-size:12.5px;color:#8a9081}
+  table.photos{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.photos th,table.photos td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.photos th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:#6b7268}
+  .tg{display:inline-block;background:var(--sand);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin:2px 3px 0 0;font-size:11.5px;text-transform:capitalize}
+  .cat-pill{display:inline-block;background:var(--green);color:#fff;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600;text-transform:capitalize}
+  .miss{color:var(--warn);font-style:italic}
+  .callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:6px}
+  .callout{background:#fff;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:8px;padding:14px 16px}
+  .callout h3{margin:0 0 4px;font-size:14px;color:var(--green-dk)}
+  .callout p{margin:0;font-size:13px;color:#5d645a}
+  [hidden]{display:none !important}
+  @media(max-width:680px){.form-grid{grid-template-columns:1fr}.callouts{grid-template-columns:1fr}.masthead h1{font-size:23px}.filt-right{width:100%}}
+</style>
+</head>
+<body>
+
+<div class="proto">Prototype v2 &mdash; <strong>one engine, two modes, two-tier tags.</strong> Real Tussey photos, categories, and sub-tags harvested from the live gallery.</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <h1 id="hTitle">Photo Gallery</h1>
+    <p id="hSub">Browse individual project photos by service and town. Pick a main category to reveal its sub-tags, exactly like the current gallery.</p>
+    <div class="viewtabs">
+      <button id="tabPhoto" class="active" onclick="setMode('photo')">Photo Gallery</button>
+      <button id="tabProject" onclick="setMode('project')">Project Gallery</button>
+      <button id="tabTeam" onclick="setMode('team')">Team / tagging</button>
+    </div>
+  </div>
+</header>
+
+<div id="galleryUI">
+  <div class="controls">
+    <div class="wrap">
+      <div class="rowmain">
+        <div class="chips" id="catChips"></div>
+        <div class="filt-right">
+          <select id="locFilter" onchange="applyFilters()"><option value="">All locations</option></select>
+          <div class="search"><input id="searchBox" type="search" placeholder="Search…" oninput="applyFilters()"></div>
+        </div>
+      </div>
+      <div class="subrow" id="subRow" hidden></div>
+      <div class="count" id="count"></div>
+    </div>
+  </div>
+  <main>
+    <div class="wrap">
+      <div class="grid" id="grid"></div>
+      <div id="emptyState" class="empty" hidden>No matches for this combination yet. Try another category, sub-tag, or town.</div>
+      <div class="loadwrap"><button class="loadmore" id="loadMore" onclick="loadMore()">Load more</button></div>
+    </div>
+  </main>
+</div>
+
+<div id="teamUI" hidden>
+  <main>
+    <div class="wrap">
+      <div class="callouts">
+        <div class="callout"><h3>Two-tier tags</h3><p>Each photo gets a main category and one or more sub-tags. The same structure powers the visitor filters and the local-SEO pages.</p></div>
+        <div class="callout"><h3>Projects are sets of photos</h3><p>A project groups these tagged photos with project-level info. Same data, two ways to browse.</p></div>
+        <div class="callout"><h3>Fast to maintain</h3><p>Upload, pick category and sub-tags, accept suggested alt text and caption, publish. Drafting can be AI-assisted.</p></div>
+      </div>
+      <div class="panel">
+        <h2>Add a photo</h2>
+        <p class="sub">The screen your team uses. Sub-tags update to match the chosen category. (Demo — nothing is saved.)</p>
+        <div class="form-grid">
+          <div class="fld"><label>Title</label><input value="Backyard Waterfall" id="f_title"></div>
+          <div class="fld"><label>Main category</label><select id="f_cat" onchange="syncFormSubs()"></select></div>
+          <div class="fld"><label>Service area / town</label><select id="f_loc"></select></div>
+          <div class="fld"><label>Sub-tags</label><select id="f_sub" multiple size="4"></select></div>
+          <div class="fld full"><label>Alt text <span class="note">(SEO &amp; accessibility)</span></label>
+            <textarea id="f_alt">Pondless waterfall with natural boulders installed in State College, PA by Tussey Landscaping</textarea>
+            <button class="suggest" onclick="suggestAlt()">✨ Suggest from photo</button></div>
+          <div class="fld full"><label>Caption</label><textarea id="f_cap">A custom pondless waterfall tucked into a State College backyard, built with locally sourced boulders.</textarea></div>
+        </div>
+        <div class="savebar"><button class="savebtn">Save &amp; publish</button><span class="note">Saving tags the image so it appears under its category, sub-tags, town, and any project automatically.</span></div>
+      </div>
+      <div class="panel">
+        <h2>The full tag taxonomy (from the live site)</h2>
+        <p class="sub">Every main category and its sub-tags, exactly as the current gallery uses them.</p>
+        <table class="photos"><thead><tr><th>Main category</th><th>Sub-tags</th></tr></thead><tbody id="taxTable"></tbody></table>
+      </div>
+      <div class="panel">
+        <h2>Tagged photos in this sample</h2>
+        <p class="sub">Harvested photos as the data model. The orange row is an un-tagged, raw-filename photo that still needs enrichment.</p>
+        <table class="photos"><thead><tr><th>Title</th><th>Category</th><th>Town</th><th>Sub-tags</th></tr></thead><tbody id="photoTable"></tbody></table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="lb" id="lb">
+  <span class="lb-counter" id="lbCounter"></span>
+  <button class="lb-x" onclick="closeLb()" aria-label="Close">&times;</button>
+  <button class="lb-nav prev" onclick="navLb(-1)" aria-label="Previous">&#8249;</button>
+  <button class="lb-nav next" onclick="navLb(1)" aria-label="Next">&#8250;</button>
+  <img class="lb-img" id="lbImg" alt="">
+  <div class="lb-cap"><div class="t" id="lbT"></div><div class="l" id="lbL"></div><div class="ctx" id="lbCtx"></div><div class="tags" id="lbTags"></div><a id="lbLink" class="lb-proj-link" target="_blank" rel="noopener" hidden>View full project on tusseylandscaping.com ↗</a></div>
+</div>
+
+<script>
+/* ============================================================
+   LXPG engine — exposed on window.LXPG for testing
+   ============================================================ */
+(function(){
+  var BASE="https://images.tusseylandscaping.com/gallery/public/";
+  function variant(f,suf){ return f.replace(/(\.[a-z]+)$/i,"-"+suf+"$1"); } /* -thumb 480 / -web 1920 */
+
+  /* Full main-category -> sub-tag taxonomy, harvested live from /photo-gallery/ */
+  var TAXONOMY=[
+    {main:"lighting", subs:["underwater","path lights","up lights","moon lights","wall lights","amp"]},
+    {main:"pavilions & pergolas", subs:["wood","vinyl","shade curtain","shade top"]},
+    {main:"pools", subs:["outdoor","indoor","pool house"]},
+    {main:"water features", subs:["ponds","stream","waterfall","fountain","slate urn","copper bowl","bubbling rock","bog filtration","fish","premiere collection","simplicity series","pondless"]},
+    {main:"hardscape", subs:["patio","walkway","sidewalk","steps","seating wall","retaining wall","paver art","stepping stones","driveway","fireplace","outdoor kitchen","pillar"]},
+    {main:"construction", subs:["hardscape","water features","landscape"]},
+    {main:"landscape", subs:["trees","perrenials","shrubs","mulch beds","gravel beds","mountain boulders"]}
+  ];
+  function subsFor(main){ var e=TAXONOMY.find(function(x){return x.main===main;}); return e?e.subs:[]; }
+
+  /* sample photos: [title, town, main, subs(csv), filename] */
+  var RAW=[
+   ["Koi Fish","Hollidaysburg, PA","water features","fish, ponds","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-59-95.jpg"],
+   ["Cascade Waters","Hollidaysburg, PA","water features","waterfall","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-103-78.jpg"],
+   ["Falling Water","State College, PA","water features","fountain, slate urn, copper bowl","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-37-81.jpg"],
+   ["Copper Bowls","Altoona, PA","water features","copper bowl","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-250-47.jpg"],
+   ["Water in Nature","Altoona, PA","water features","waterfall","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-6-69.jpg"],
+   ["Waterfall","Ebensburg, PA","water features","waterfall","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-163-40.jpg"],
+   ["Water Feature Lighting","Hollidaysburg, PA","water features","waterfall","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-116-38.jpg"],
+   ["Fountainscape","Altoona, PA","water features","fountain, copper bowl, slate urn","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-254-24.jpg"],
+   ["Winter Waterfall","Hollidaysburg, PA","water features","pondless, waterfall","Aquascape%20Ponds%20-%20Waterfalls%20-%20Fountains-276-65.jpg"],
+   ["Outdoor Living Space","Huntingdon, PA","hardscape","fireplace, patio","Patios%20-%20Walkways%20-%20Retaining%20Walls-42-56.jpg"],
+   ["Mini Escape","Duncansville, PA","hardscape","seating wall, fireplace","Patios%20-%20Walkways%20-%20Retaining%20Walls-161-35.jpg"],
+   ["Natural Stone Steps","Duncansville, PA","hardscape","steps","Patios%20-%20Walkways%20-%20Retaining%20Walls-162-74.jpg"],
+   ["Outdoor Living Areas","Martinsburg, PA","hardscape","patio","Outdoor%20Living%20Space%20Project%20-%20Roaring%20Spring%20PA-5-2-29.jpg"],
+   ["Spring Plantings","Hollidaysburg, PA","landscape","perrenials","Landscapes%20-%20Landscape%20Designs-51-63.jpg"],
+   ["PANA9641","","construction","","Tussey%20Crew%20on%20Construction-3-55.jpg"]
+  ];
+  function buildPhotos(raw){
+    return raw.map(function(r){
+      var subs=r[3]?r[3].split(",").map(function(t){return t.trim();}).filter(Boolean):[];
+      return {title:r[0],loc:r[1],main:r[2],subs:subs,full:BASE+variant(r[4],"web"),thumb:BASE+variant(r[4],"thumb"),tagged:(subs.length>0&&!!r[1])};
+    });
+  }
+  var PHOTOS=buildPhotos(RAW);
+
+  /* REAL projects harvested from /project-showcase/ : [id, title, thumbPath] */
+  var PHOST="https://www.tusseylandscaping.com";
+  var PROJECTS_RAW=[
+   ["68","Swim Recreation Pond Paradise with Outdoor Living Space","/wp-content/uploads/2026/04/DJI_0077-735x489.jpg"],
+   ["67","Backyard Hardscape Patio with Landscaping and Sidewalk in State College, PA","/wp-content/uploads/2026/03/MTN5595-735x489.jpg"],
+   ["66","Hardscaping and Landscaping Makeover in Altoona, PA","/wp-content/uploads/2026/02/MTN2840-735x489.jpg"],
+   ["65","Landscaping and Lighting Project in Duncansville, PA","/wp-content/uploads/2026/02/MTN3936-735x489.jpg"],
+   ["64","Raised Paver Patio with Low-Maintenance Landscaping in East Freedom, PA","/wp-content/uploads/2026/01/MTN2500-735x489.jpg"],
+   ["63","Water Feature in James Creek, PA","/wp-content/uploads/2025/12/P1000522-735x489.jpg"],
+   ["62","Large Water Feature with flagstone in Fort Ashby, WV","/wp-content/uploads/2025/11/P1000358-735x489.jpg"],
+   ["61","Landscaped Water Feature with Pond and Patio in State College, PA","/wp-content/uploads/2025/10/MTN4831-Copy-735x489.jpg"],
+   ["59","Pond and Flagstone Patio Makeover in Johnstown, PA","/wp-content/uploads/2025/10/PANA1721-735x489.jpg"],
+   ["58","Backyard Transformation with Patio, Fire Pit, and Water Feature in Hollidaysburg, PA","/wp-content/uploads/2025/10/PANA2086-735x489.jpg"],
+   ["57","Water Feature and Landscaping at New Home build in Hyndman, PA","/wp-content/uploads/2025/10/PANA2538-735x489.jpg"],
+   ["56","Flagstone Patio Outdoor Living Space with Large Water Feature and Firepit in Port Matilda, PA","/wp-content/uploads/2025/09/MTN5078-735x489.jpg"],
+   ["55","Waterfall on Mini Golf Course with Mountain Boulders in Bedford, PA","/wp-content/uploads/2025/09/MTN9865-735x489.jpg"],
+   ["54","Front Yard Garden with Fountains and Landscaping in Boalsburg, PA","/wp-content/uploads/2025/09/photo_2022-07-15_13-06-11-735x489.jpg"],
+   ["53","Backyard Oasis with Patio, Pond, Pavilion, Firepit and Fireplace in Ebensburg, PA","/wp-content/uploads/2025/09/MTN6639-735x489.jpg"],
+   ["52","Front Walkway and Landscaping in Martinsburg, PA","/wp-content/uploads/2025/08/MTN1121-735x489.jpg"],
+   ["50","Complete Backyard Make Over with Fiberglass Swimming Pool in Huntingdon, PA","/wp-content/uploads/2025/07/MTN9608-735x489.jpg"],
+   ["49","Backyard Escape with Pond and Flagstone Patio in Nanty Glo PA","/wp-content/uploads/2025/07/PANA3293-735x489.jpg"],
+   ["48","Backyard Pond and Mountain Stream with Flagstone Patio and Natural Stone Stairs in Johnstown, PA","/wp-content/uploads/2025/06/photo_2022-12-26_15-09-33-735x489.jpg"],
+   ["47","Swim Pond with Water feature and Waterfalls built in located in Dubois PA","/wp-content/uploads/2025/06/MTN9154-735x489.jpg"],
+   ["46","Backyard Water Features with Pond, Waterfalls, and Patio in Delmont, PA","/wp-content/uploads/2025/06/photo_2022-06-28_18-59-45-735x489.jpg"],
+   ["45","Resort like Outdoor Living Space with Fiberglass Pool, Hot tub, and Outdoor Kitchen in Duncansville, PA","/wp-content/uploads/2025/06/MTN7351-735x489.jpg"],
+   ["44","Water Feature with Flagstone Patio and Landscaping in Everett, PA","/wp-content/uploads/2025/05/photo_2022-11-09_20-20-17-735x489.jpg"]
+  ];
+  function slugify(t){ return t.toLowerCase().replace(/,/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+  function parseLoc(t){ var re=/\bin\s+([A-Za-z][A-Za-z .]*?)\s*,?\s+([A-Z]{2})\b/g,m,last=null; while((m=re.exec(t)))last=m; return last?(last[1].trim()+", "+last[2]):""; }
+  function inferMain(t){ var s=t.toLowerCase();
+    if(/(fiberglass pool|swimming pool|\bpool\b)/.test(s) && !/swim pond|swim recreation/.test(s)) return "pools";
+    if(/water feature|pond|waterfall|fountain|stream|swim pond|swim recreation/.test(s)) return "water features";
+    if(/pavilion|pergola/.test(s)) return "pavilions & pergolas";
+    if(/lighting/.test(s)) return "lighting";
+    if(/patio|hardscap|paver|walkway|sidewalk|flagstone|retaining|stair|fire ?pit|firepit|fireplace|outdoor kitchen|\bwall\b/.test(s)) return "hardscape";
+    if(/landscap|garden|planting|mulch|tree|shrub/.test(s)) return "landscape";
+    return "hardscape";
+  }
+  function buildProjects(raw){
+    return raw.map(function(r){
+      var title=r[1], loc=parseLoc(title), main=inferMain(title);
+      var cover={ title:title, loc:loc, main:main, subs:[], full:PHOST+r[2].replace(/-735x489/,""), thumb:PHOST+r[2] };
+      return { id:r[0], title:title, loc:loc, main:main, cover:cover, photos:[cover], link:PHOST+"/project/"+slugify(title)+"/" };
+    });
+  }
+  var PROJECTS=buildProjects(PROJECTS_RAW);
+
+  function mainCategories(){ return TAXONOMY.map(function(t){return t.main;}); }
+  function uniqueLocations(items){ var s={}; items.forEach(function(p){ if(p.loc) s[p.loc]=1; }); return Object.keys(s).sort(); }
+
+  function matchPhoto(p,st){
+    if(st.main && p.main!==st.main) return false;
+    if(st.sub && p.subs.indexOf(st.sub)<0) return false;
+    if(st.loc && p.loc!==st.loc) return false;
+    if(st.q){ var hay=(p.title+" "+p.subs.join(" ")+" "+p.main+" "+p.loc).toLowerCase(); if(hay.indexOf(st.q.toLowerCase())<0) return false; }
+    return true;
+  }
+  function filterPhotos(photos,st){ return photos.filter(function(p){return matchPhoto(p,st);}); }
+  function projHasSub(pr,sub){ return pr.photos.some(function(p){return p.subs.indexOf(sub)>=0;}); }
+  function matchProject(pr,st){
+    if(st.main && pr.main!==st.main) return false;
+    if(st.sub && !projHasSub(pr,st.sub)) return false;
+    if(st.loc && pr.loc!==st.loc) return false;
+    if(st.q){ var hay=(pr.title+" "+pr.main+" "+pr.loc+" "+pr.photos.map(function(p){return p.subs.join(" ");}).join(" ")).toLowerCase(); if(hay.indexOf(st.q.toLowerCase())<0) return false; }
+    return true;
+  }
+  function filterProjects(projects,st){ return projects.filter(function(pr){return matchProject(pr,st);}); }
+
+  window.LXPG={BASE:BASE,variant:variant,TAXONOMY:TAXONOMY,subsFor:subsFor,buildPhotos:buildPhotos,buildProjects:buildProjects,
+    mainCategories:mainCategories,uniqueLocations:uniqueLocations,filterPhotos:filterPhotos,filterProjects:filterProjects,
+    slugify:slugify,parseLoc:parseLoc,inferMain:inferMain,
+    PHOTOS:PHOTOS,PROJECTS:PROJECTS,RAW:RAW,PROJECTS_RAW:PROJECTS_RAW};
+})();
+
+/* ============================================================
+   UI
+   ============================================================ */
+var L=window.LXPG;
+var mode="photo";
+var state={main:"",sub:"",loc:"",q:"",shown:9};
+var STEP=6, current=[], lbSet=[], lbIndex=0, lbContext="";
+
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+function buildChips(){
+  var cats=["All"].concat(L.mainCategories());
+  document.getElementById("catChips").innerHTML=cats.map(function(c){
+    var v=c==="All"?"":c;
+    return '<button class="chip'+(v===state.main?' active':'')+'" data-v="'+esc(v)+'" onclick="setMain(this)">'+esc(c)+'</button>';
+  }).join("");
+}
+function buildSubRow(){
+  var row=document.getElementById("subRow");
+  if(mode==="project" || !state.main){ row.hidden=true; row.innerHTML=""; return; } /* sub-tags are a Photo Gallery feature; live Project Showcase filters by category + town only */
+  var subs=L.subsFor(state.main);
+  if(!subs.length){ row.hidden=true; row.innerHTML=""; return; }
+  row.hidden=false;
+  row.innerHTML='<span class="lbl">'+esc(state.main)+' &rsaquo;</span>'
+    +'<button class="subchip'+(state.sub===""?' active':'')+'" data-s="" onclick="setSub(this)">All</button>'
+    +subs.map(function(s){ return '<button class="subchip'+(state.sub===s?' active':'')+'" data-s="'+esc(s)+'" onclick="setSub(this)">'+esc(s)+'</button>'; }).join("");
+}
+function buildLoc(){
+  var locs=L.uniqueLocations(mode==="project"?L.PROJECTS:L.PHOTOS);
+  document.getElementById("locFilter").innerHTML='<option value="">All locations</option>'+
+    locs.map(function(l){return '<option value="'+esc(l)+'"'+(l===state.loc?' selected':'')+'>'+esc(l)+'</option>';}).join("");
+}
+function setMain(btn){ state.main=btn.getAttribute("data-v"); state.sub=""; state.shown=9; buildChips(); buildSubRow(); render(); }
+function setSub(btn){ state.sub=btn.getAttribute("data-s"); state.shown=9; buildSubRow(); render(); }
+function applyFilters(){ state.loc=document.getElementById("locFilter").value; state.q=document.getElementById("searchBox").value; state.shown=9; render(); }
+
+function render(){
+  current = mode==="project" ? L.filterProjects(L.PROJECTS,state) : L.filterPhotos(L.PHOTOS,state);
+  var show=current.slice(0,state.shown);
+  document.getElementById("grid").innerHTML=show.map(function(it,i){
+    if(mode==="project"){
+      var cover=it.cover||{};
+      return '<div class="card" onclick="openProject('+i+')" tabindex="0"><div class="thumb">'
+        +'<span class="badge">'+esc(it.main)+'</span>'
+        +'<img loading="lazy" src="'+esc(cover.thumb||"")+'" alt="'+esc(it.title)+'"></div>'
+        +'<div class="cap"><div class="t">'+esc(it.title)+'</div>'
+        +(it.loc?'<div class="l">📍 '+esc(it.loc)+'</div>':'')+'</div></div>';
+    }
+    var st=it.subs.length?'<div class="st">'+it.subs.map(function(s){return '<span>'+esc(s)+'</span>';}).join("")+'</div>':'';
+    return '<div class="card" onclick="openPhoto('+i+')" tabindex="0"><div class="thumb">'
+      +'<span class="badge">'+esc(it.main)+'</span>'
+      +'<img loading="lazy" src="'+esc(it.thumb)+'" alt="'+esc(it.title+(it.loc?(" | "+it.loc):""))+'"></div>'
+      +'<div class="cap"><div class="t">'+esc(it.title)+'</div>'
+      +(it.loc?'<div class="l">📍 '+esc(it.loc)+'</div>':'<div class="l" style="color:#b06a1e">needs town &amp; sub-tags</div>')+st+'</div></div>';
+  }).join("");
+  document.getElementById("emptyState").hidden = current.length!==0;
+  var noun=mode==="project"?"project":"photo";
+  document.getElementById("count").textContent=current.length+" "+noun+(current.length===1?"":"s")
+    +(state.main?(" · "+state.main):"")+(state.sub?(" › "+state.sub):"")+(state.loc?(" · "+state.loc):"");
+  var lm=document.getElementById("loadMore");
+  if(state.shown>=current.length){ lm.setAttribute("disabled","disabled"); lm.textContent=current.length?"All shown":""; lm.style.visibility=current.length?"visible":"hidden"; }
+  else { lm.removeAttribute("disabled"); lm.textContent="Load more"; lm.style.visibility="visible"; }
+}
+function loadMore(){ state.shown+=STEP; render(); }
+
+var lbLink="";
+function openPhoto(i){ lbSet=current.slice(); lbIndex=i; lbContext=""; lbLink=""; showLb(); document.getElementById("lb").classList.add("open"); }
+function openProject(i){ var pr=current[i]; lbSet=pr.photos.slice(); lbIndex=0; lbContext=pr.title; lbLink=pr.link||""; showLb(); document.getElementById("lb").classList.add("open"); }
+function closeLb(){ document.getElementById("lb").classList.remove("open"); }
+function navLb(d){ lbIndex=(lbIndex+d+lbSet.length)%lbSet.length; showLb(); }
+function showLb(){
+  var p=lbSet[lbIndex]; if(!p) return;
+  document.getElementById("lbImg").src=p.full;
+  document.getElementById("lbImg").alt=p.title+(p.loc?(" | "+p.loc):"");
+  document.getElementById("lbT").textContent=p.title;
+  document.getElementById("lbL").textContent=p.loc||"";
+  document.getElementById("lbCtx").textContent=lbContext?("Project: "+lbContext):("Category: "+p.main);
+  document.getElementById("lbTags").innerHTML=p.subs.map(function(t){return '<span>'+esc(t)+'</span>';}).join("");
+  document.getElementById("lbCounter").textContent=(lbIndex+1)+" / "+lbSet.length;
+  var lk=document.getElementById("lbLink");
+  if(lbLink){ lk.href=lbLink; lk.hidden=false; } else { lk.hidden=true; }
+}
+document.getElementById("lb").addEventListener("click",function(e){ if(e.target.id==="lb") closeLb(); });
+document.addEventListener("keydown",function(e){
+  if(!document.getElementById("lb").classList.contains("open")) return;
+  if(e.key==="Escape") closeLb(); if(e.key==="ArrowLeft") navLb(-1); if(e.key==="ArrowRight") navLb(1);
+});
+
+/* team */
+function buildTeam(){
+  document.getElementById("f_cat").innerHTML=L.mainCategories().map(function(c){return '<option'+(c==="water features"?' selected':'')+'>'+esc(c)+'</option>';}).join("");
+  document.getElementById("f_loc").innerHTML=L.uniqueLocations(L.PHOTOS).map(function(l){return '<option'+(l==="State College, PA"?' selected':'')+'>'+esc(l)+'</option>';}).join("");
+  syncFormSubs();
+  document.getElementById("taxTable").innerHTML=L.TAXONOMY.map(function(t){
+    return '<tr><td><span class="cat-pill">'+esc(t.main)+'</span></td><td>'+t.subs.map(function(s){return '<span class="tg">'+esc(s)+'</span>';}).join("")+'</td></tr>';
+  }).join("");
+  document.getElementById("photoTable").innerHTML=L.PHOTOS.map(function(p){
+    var subs=p.tagged?p.subs.map(function(s){return '<span class="tg">'+esc(s)+'</span>';}).join(""):'<span class="miss">needs sub-tags &amp; town</span>';
+    return '<tr><td>'+(p.tagged?esc(p.title):'<span class="miss">'+esc(p.title)+'</span>')+'</td>'
+      +'<td><span class="cat-pill">'+esc(p.main)+'</span></td>'
+      +'<td>'+(p.loc?esc(p.loc):'<span class="miss">—</span>')+'</td><td>'+subs+'</td></tr>';
+  }).join("");
+}
+function syncFormSubs(){
+  var main=document.getElementById("f_cat").value;
+  document.getElementById("f_sub").innerHTML=L.subsFor(main).map(function(s){return '<option>'+esc(s)+'</option>';}).join("");
+}
+function suggestAlt(){
+  var t=document.getElementById("f_title").value,c=document.getElementById("f_cat").value,l=document.getElementById("f_loc").value;
+  document.getElementById("f_alt").value=t+" — "+c+" installed in "+l+" by Tussey Landscaping";
+}
+
+/* mode switching */
+function setMode(m){
+  mode=m;
+  document.getElementById("tabPhoto").classList.toggle("active",m==="photo");
+  document.getElementById("tabProject").classList.toggle("active",m==="project");
+  document.getElementById("tabTeam").classList.toggle("active",m==="team");
+  document.getElementById("galleryUI").hidden=(m==="team");
+  document.getElementById("teamUI").hidden=(m!=="team");
+  if(m==="team"){
+    document.getElementById("hTitle").textContent="Team / Tagging View";
+    document.getElementById("hSub").textContent="How a photo gets its main category and sub-tags. Projects are sets of these tagged photos.";
+  } else {
+    state={main:"",sub:"",loc:"",q:"",shown:9};
+    document.getElementById("searchBox").value="";
+    document.getElementById("hTitle").textContent=m==="project"?"Project Gallery":"Photo Gallery";
+    document.getElementById("hSub").textContent=m==="project"
+      ? "Browse complete projects by service and town. Pick a category to reveal its sub-tags."
+      : "Browse individual project photos by service and town. Pick a main category to reveal its sub-tags, like the current gallery.";
+    buildChips(); buildSubRow(); buildLoc(); render();
+  }
+  window.scrollTo(0,0);
+}
+
+/* init */
+buildChips(); buildSubRow(); buildLoc(); render(); buildTeam();
+</script>
+</body>
+</html>
