@@ -133,6 +133,45 @@ class LXPG_Settings {
                 ],
             ],
         ],
+        'lightbox' => [
+            'label'  => 'Lightbox',
+            'fields' => [
+                'css_lb_bg' => [
+                    'label'    => 'Backdrop Color',
+                    'type'     => 'rgba',
+                    'default'  => 'rgba(0,0,0,0.92)',
+                    'property' => '--lxpg-lb-bg',
+                    'hint'     => 'Use rgba() to control opacity. e.g. rgba(0,0,0,0.9)',
+                ],
+                'css_lb_text' => [
+                    'label'    => 'Caption Text Color',
+                    'type'     => 'color',
+                    'default'  => '#ffffff',
+                    'property' => '--lxpg-lb-text',
+                ],
+            ],
+        ],
+        'cta_content' => [
+            'label'  => 'CTA Band Content — Single Project Pages',
+            'fields' => [
+                'cta_page_id' => [
+                    'label'   => 'Contact Page',
+                    'type'    => 'page',
+                    'default' => '0',
+                    'hint'    => 'The page the CTA button links to. Leave unset to hide the CTA band entirely.',
+                ],
+                'cta_heading' => [
+                    'label'   => 'Heading',
+                    'type'    => 'text',
+                    'default' => 'Love This Project?',
+                ],
+                'cta_button_text' => [
+                    'label'   => 'Button Text',
+                    'type'    => 'text',
+                    'default' => 'Contact Us',
+                ],
+            ],
+        ],
         'cta_style' => [
             'label'  => 'CTA Band Colors',
             'fields' => [
@@ -159,45 +198,6 @@ class LXPG_Settings {
                     'type'     => 'color',
                     'default'  => '#1f2937',
                     'property' => '--lxpg-cta-btn-text',
-                ],
-            ],
-        ],
-        'lightbox' => [
-            'label'  => 'Lightbox',
-            'fields' => [
-                'css_lb_bg' => [
-                    'label'    => 'Backdrop Color',
-                    'type'     => 'rgba',
-                    'default'  => 'rgba(0,0,0,0.92)',
-                    'property' => '--lxpg-lb-bg',
-                    'hint'     => 'Use rgba() to control opacity. e.g. rgba(0,0,0,0.9)',
-                ],
-                'css_lb_text' => [
-                    'label'    => 'Caption Text Color',
-                    'type'     => 'color',
-                    'default'  => '#ffffff',
-                    'property' => '--lxpg-lb-text',
-                ],
-            ],
-        ],
-        'cta_content' => [
-            'label'  => 'CTA Band — Single Project Pages',
-            'fields' => [
-                'cta_page_id' => [
-                    'label'   => 'Contact Page',
-                    'type'    => 'page',
-                    'default' => '0',
-                    'hint'    => 'The page the CTA button links to. Leave unset to hide the CTA band entirely.',
-                ],
-                'cta_heading' => [
-                    'label'   => 'Heading',
-                    'type'    => 'text',
-                    'default' => 'Love This Project?',
-                ],
-                'cta_button_text' => [
-                    'label'   => 'Button Text',
-                    'type'    => 'text',
-                    'default' => 'Contact Us',
                 ],
             ],
         ],
