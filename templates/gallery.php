@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
     <?php endif; ?>
 
     <div class="lxpg-grid" role="list">
-        <?php foreach ( $posts as $post ) : setup_postdata( $post ); ?>
+        <?php global $post; foreach ( $posts as $post ) : setup_postdata( $post ); ?>
             <?php include __DIR__ . '/partials/project-card.php'; ?>
         <?php endforeach; wp_reset_postdata(); ?>
     </div>
