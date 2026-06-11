@@ -80,10 +80,14 @@ class LXPG_Shortcode {
                     }
                 }
             } else {
-                // Treat as taxonomy slug.
                 $param = 'pg_' . sanitize_key( $field );
                 if ( isset( $_GET[ $param ] ) && $_GET[ $param ] !== '' ) {
-                    $active[ $param ] = absint( $_GET[ $param ] );
+                    if ( taxonomy_exists( $field ) ) {
+                        $active[ $param ] = absint( $_GET[ $param ] );
+                    } else {
+                        // ACF / native post meta — store as sanitized string.
+                        $active[ $param ] = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+                    }
                 }
             }
         }
@@ -148,8 +152,8 @@ class LXPG_Shortcode {
             ];
         }
 
-        // Active custom taxonomy filters.
-        foreach ( $active as $param => $term_id ) {
+        // Active custom taxonomy and ACF/meta filters.
+        foreach ( $active as $param => $filter_value ) {
             if ( ! str_starts_with( $param, 'pg_' ) ) {
                 continue;
             }
@@ -161,7 +165,14 @@ class LXPG_Shortcode {
                 $args['tax_query'][] = [
                     'taxonomy' => $slug,
                     'field'    => 'term_id',
-                    'terms'    => $term_id,
+                    'terms'    => $filter_value,
+                ];
+            } else {
+                // ACF / native post meta field.
+                $args['meta_query'][] = [
+                    'key'     => $slug,
+                    'value'   => $filter_value,
+                    'compare' => '=',
                 ];
             }
         }

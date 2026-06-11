@@ -121,12 +121,8 @@ $reserved = [ 'location', 'sqft' ];
                 </select>
             </div>
 
-        <?php else : ?>
+        <?php elseif ( taxonomy_exists( $field ) ) : ?>
             <?php
-            // Treat as a taxonomy slug.
-            if ( ! taxonomy_exists( $field ) ) {
-                continue;
-            }
             $tax_obj   = get_taxonomy( $field );
             $tax_label = $tax_obj ? $tax_obj->labels->singular_name : ucwords( str_replace( [ '_', '-' ], ' ', $field ) );
             $terms     = get_terms( [ 'taxonomy' => $field, 'orderby' => 'name', 'order' => 'ASC', 'hide_empty' => true ] );
@@ -136,7 +132,7 @@ $reserved = [ 'location', 'sqft' ];
             }
 
             $param    = 'pg_' . $field;
-            $input_id = 'lxpg-filter-' . esc_attr( $field );
+            $input_id = 'lxpg-filter-' . $field;
             ?>
             <div class="lxpg-filter-item">
                 <label for="<?php echo esc_attr( $input_id ); ?>" class="lxpg-sr-only">
@@ -155,6 +151,55 @@ $reserved = [ 'location', 'sqft' ];
                         <option value="<?php echo esc_attr( $term->term_id ); ?>"
                             <?php selected( $active[ $param ] ?? 0, $term->term_id ); ?>>
                             <?php echo esc_html( $term->name ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+        <?php else : ?>
+            <?php
+            // ACF / native post meta field — build dropdown from distinct published values.
+            global $wpdb;
+            $meta_key   = sanitize_key( $field );
+            $meta_values = $wpdb->get_col( $wpdb->prepare(
+                "SELECT DISTINCT pm.meta_value
+                 FROM {$wpdb->postmeta} pm
+                 JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+                 WHERE pm.meta_key = %s
+                   AND p.post_type = %s
+                   AND p.post_status = %s
+                   AND pm.meta_value != ''
+                 ORDER BY pm.meta_value ASC",
+                $meta_key,
+                'project',
+                'publish'
+            ) );
+
+            if ( empty( $meta_values ) ) {
+                continue;
+            }
+
+            $param    = 'pg_' . $meta_key;
+            $input_id = 'lxpg-filter-' . $meta_key;
+            $label    = ucwords( str_replace( [ '_', '-' ], ' ', $field ) );
+            ?>
+            <div class="lxpg-filter-item">
+                <label for="<?php echo esc_attr( $input_id ); ?>" class="lxpg-sr-only">
+                    <?php echo esc_html( $label ); ?>
+                </label>
+                <select name="<?php echo esc_attr( $param ); ?>"
+                        id="<?php echo esc_attr( $input_id ); ?>"
+                        class="lxpg-filter-select">
+                    <option value="">
+                        <?php
+                        /* translators: %s is the field label e.g. "Color" */
+                        printf( esc_html__( 'Any %s', 'lifex-project-gallery' ), esc_html( $label ) );
+                        ?>
+                    </option>
+                    <?php foreach ( $meta_values as $val ) : ?>
+                        <option value="<?php echo esc_attr( $val ); ?>"
+                            <?php selected( $active[ $param ] ?? '', $val ); ?>>
+                            <?php echo esc_html( $val ); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
