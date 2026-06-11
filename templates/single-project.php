@@ -107,10 +107,6 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
             <div class="lxpg-single-details">
                 <h1 class="lxpg-single-title"><?php echo esc_html( $title ); ?></h1>
 
-                <?php if ( $subtitle ) : ?>
-                    <p class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></p>
-                <?php endif; ?>
-
                 <!-- Social sharing -->
                 <div class="lxpg-share" aria-label="<?php esc_attr_e( 'Share this project', 'lifex-project-gallery' ); ?>">
                     <span class="lxpg-share-label"><?php esc_html_e( 'Share:', 'lifex-project-gallery' ); ?></span>
@@ -145,6 +141,10 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
                         </svg>
                     </a>
                 </div>
+
+                <?php if ( $subtitle ) : ?>
+                    <h2 class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></h2>
+                <?php endif; ?>
 
                 <div class="lxpg-single-content">
                     <?php the_content(); ?>
@@ -232,7 +232,7 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
         <div class="lxpg-single-full">
             <h1 class="lxpg-single-title"><?php echo esc_html( $title ); ?></h1>
             <?php if ( $subtitle ) : ?>
-                <p class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+                <h2 class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></h2>
             <?php endif; ?>
             <div class="lxpg-single-content"><?php the_content(); ?></div>
             <?php if ( ! empty( $detail_rows ) ) : ?>
