@@ -181,23 +181,18 @@ class LXPG_Settings {
             ],
         ],
         'cta_content' => [
-            'label'  => 'CTA Band Content',
+            'label'  => 'CTA Band — Single Project Pages',
             'fields' => [
                 'cta_page_id' => [
                     'label'   => 'Contact Page',
                     'type'    => 'page',
                     'default' => '0',
-                    'hint'    => 'Leave unset to hide the CTA band entirely.',
+                    'hint'    => 'The page the CTA button links to. Leave unset to hide the CTA band entirely.',
                 ],
                 'cta_heading' => [
                     'label'   => 'Heading',
                     'type'    => 'text',
                     'default' => 'Love This Project?',
-                ],
-                'cta_subheading' => [
-                    'label'   => 'Subheading',
-                    'type'    => 'text',
-                    'default' => 'Get Started on Yours Today!',
                 ],
                 'cta_button_text' => [
                     'label'   => 'Button Text',

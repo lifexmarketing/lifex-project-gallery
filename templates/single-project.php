@@ -74,7 +74,6 @@ $has_gallery = ! empty( $gallery );
 $cta_page_id    = (int) LXPG_Settings::get( 'cta_page_id', 0 );
 $cta_url        = $cta_page_id ? get_permalink( $cta_page_id ) : '';
 $cta_heading    = LXPG_Settings::get( 'cta_heading',     'Love This Project?' );
-$cta_sub        = LXPG_Settings::get( 'cta_subheading',  'Get Started on Yours Today!' );
 $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
 ?>
 
@@ -228,14 +227,11 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
     <?php if ( $cta_url ) : ?>
     <div class="lxpg-cta">
         <div class="lxpg-cta-inner">
-            <div class="lxpg-cta-text">
-                <?php if ( $cta_heading ) : ?>
+            <?php if ( $cta_heading ) : ?>
+                <div class="lxpg-cta-text">
                     <span class="lxpg-cta-heading"><?php echo esc_html( $cta_heading ); ?></span>
-                <?php endif; ?>
-                <?php if ( $cta_sub ) : ?>
-                    <span class="lxpg-cta-sub"><?php echo esc_html( $cta_sub ); ?></span>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
             <a href="<?php echo esc_url( $cta_url ); ?>" class="lxpg-cta-link">
                 <?php echo esc_html( $cta_btn ); ?>
             </a>
