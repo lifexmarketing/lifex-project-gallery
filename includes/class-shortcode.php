@@ -20,12 +20,16 @@ class LXPG_Shortcode {
             'count'         => -1,
             'category'      => '',
             'card_label'    => 'title',
+            'orderby'       => 'menu_order',
+            'order'         => 'desc',
         ], array_change_key_case( (array) $atts, CASE_LOWER ), 'project-gallery' );
 
         $show_filters    = strtolower( $atts['filters'] ) === 'on';
         $count           = $atts['count'] == -1 ? -1 : absint( $atts['count'] );
         $preset_category = sanitize_title( $atts['category'] );
         $card_label      = in_array( $atts['card_label'], [ 'title', 'project_id' ], true ) ? $atts['card_label'] : 'title';
+        $orderby         = sanitize_key( $atts['orderby'] ) ?: 'menu_order';
+        $order           = strtoupper( $atts['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 
         // Parse filter_fields into taxonomy slugs and reserved keywords.
         $filter_fields = [];
@@ -39,7 +43,7 @@ class LXPG_Shortcode {
         $active = $this->collect_active_filters( $filter_fields );
 
         // Build and run the query.
-        $query = $this->build_query( $count, $preset_category, $active );
+        $query = $this->build_query( $count, $preset_category, $active, $orderby, $order );
 
         $posts = $query->have_posts() ? $this->sort_featured( $query->posts ) : [];
         wp_reset_postdata();
@@ -89,12 +93,12 @@ class LXPG_Shortcode {
         return $active;
     }
 
-    private function build_query( int $count, string $preset_category, array $active ): WP_Query {
+    private function build_query( int $count, string $preset_category, array $active, string $orderby, string $order ): WP_Query {
         $args = [
             'post_type'      => 'project',
             'posts_per_page' => $count,
             'orderby'        => 'menu_order',
-            'order'          => 'ASC',
+            'order'          => $order,
             'post_status'    => 'publish',
             'tax_query'      => [],
             'meta_query'     => [],
@@ -169,6 +173,28 @@ class LXPG_Shortcode {
                     'compare' => '=',
                 ];
             }
+        }
+
+        // Apply sort.
+        if ( $orderby === 'date' ) {
+            $args['orderby'] = 'date';
+        } elseif ( $orderby !== 'menu_order' ) {
+            // ACF / post meta field sort. Use named meta_query clauses so posts
+            // without a value for the field are still included (NOT EXISTS branch).
+            $filter_conditions = array_values( array_filter( $args['meta_query'], 'is_array' ) );
+
+            $sort_group = [
+                'relation'          => 'OR',
+                'lxpg_sort'         => [ 'key' => $orderby, 'compare' => 'EXISTS' ],
+                'lxpg_sort_missing' => [ 'key' => $orderby, 'compare' => 'NOT EXISTS' ],
+            ];
+
+            $args['meta_query'] = empty( $filter_conditions )
+                ? $sort_group
+                : array_merge( [ 'relation' => 'AND', $sort_group ], $filter_conditions );
+
+            $args['orderby'] = [ 'lxpg_sort' => $order ];
+            unset( $args['order'] );
         }
 
         return new WP_Query( $args );

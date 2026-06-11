@@ -40,6 +40,8 @@ The shortcode is `[project-gallery]` (hyphen, not underscore).
 | `count` | integer or `-1` | `-1` | Number of projects to display. `-1` shows all. |
 | `category` | taxonomy slug | _(empty)_ | Pre-filters the gallery to a specific project category. Does not show a category filter dropdown. |
 | `card_label` | `title`, `project_id` | `title` | What appears in the caption bar below each card. `title` shows the project title; `project_id` shows "Project #[ID]". |
+| `orderby` | `menu_order`, `date`, or any ACF/meta field name | `menu_order` | Sort field for the gallery. Any value other than `menu_order` or `date` is treated as a post meta key. Projects without a value for that field are still included. |
+| `order` | `asc`, `desc` | `desc` | Sort direction. |
 
 ### Filter field resolution
 
@@ -81,6 +83,21 @@ Each value in `filter_fields` is resolved in this order:
 **Show project ID in card caption instead of title:**
 ```
 [project-gallery filters="on" filter_fields="location,sqft" card_label="project_id"]
+```
+
+**Sort by publish date, newest first:**
+```
+[project-gallery orderby="date" order="desc"]
+```
+
+**Sort by an ACF/meta field, ascending:**
+```
+[project-gallery orderby="project_sqft" order="asc"]
+```
+
+**Sort by menu order, ascending:**
+```
+[project-gallery orderby="menu_order" order="asc"]
 ```
 
 ---
