@@ -225,6 +225,12 @@ class LXPG_Settings {
         }
 
         wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_style(
+            'lxpg-preview',
+            LXPG_URL . 'assets/css/lifex-project-gallery.css',
+            [],
+            LXPG_VERSION
+        );
         wp_enqueue_script(
             'lxpg-admin',
             LXPG_URL . 'assets/js/admin.js',
@@ -310,30 +316,34 @@ class LXPG_Settings {
         $id    = 'lxpg_' . $key;
         $hint  = $field['hint'] ?? '';
 
+        $prop_attr = ! empty( $field['property'] ) ? ' data-lxpg-prop="' . esc_attr( $field['property'] ) . '"' : '';
+
         switch ( $field['type'] ) {
 
             case 'color':
                 printf(
-                    '<input type="text" name="%s" id="%s" value="%s" class="lxpg-color-field" data-default-color="%s">',
+                    '<input type="text" name="%1$s" id="%2$s" value="%3$s" class="lxpg-color-field" data-default-color="%4$s"%5$s>',
                     esc_attr( $name ),
                     esc_attr( $id ),
                     esc_attr( $value ),
-                    esc_attr( $field['default'] )
+                    esc_attr( $field['default'] ),
+                    $prop_attr
                 );
                 break;
 
             case 'rgba':
                 printf(
-                    '<input type="text" name="%s" id="%s" value="%s" class="regular-text" placeholder="%s">',
+                    '<input type="text" name="%1$s" id="%2$s" value="%3$s" class="regular-text" placeholder="%4$s"%5$s>',
                     esc_attr( $name ),
                     esc_attr( $id ),
                     esc_attr( $value ),
-                    esc_attr( $field['default'] )
+                    esc_attr( $field['default'] ),
+                    $prop_attr
                 );
                 break;
 
             case 'select':
-                echo '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '">';
+                echo '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '"' . $prop_attr . '>';
                 foreach ( $field['options'] as $val => $label ) {
                     printf(
                         '<option value="%s"%s>%s</option>',
@@ -358,11 +368,12 @@ class LXPG_Settings {
             case 'text':
             default:
                 printf(
-                    '<input type="text" name="%s" id="%s" value="%s" class="regular-text" placeholder="%s">',
+                    '<input type="text" name="%1$s" id="%2$s" value="%3$s" class="regular-text" placeholder="%4$s"%5$s>',
                     esc_attr( $name ),
                     esc_attr( $id ),
                     esc_attr( $value ),
-                    esc_attr( $field['default'] )
+                    esc_attr( $field['default'] ),
+                    $prop_attr
                 );
                 break;
         }
@@ -428,17 +439,75 @@ class LXPG_Settings {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
+
+        // Build inline style string from currently saved settings so the preview
+        // reflects the saved state on page load before any JS runs.
+        $preview_vars = '';
+        foreach ( self::SECTIONS as $section ) {
+            foreach ( $section['fields'] as $key => $field ) {
+                if ( empty( $field['property'] ) ) {
+                    continue;
+                }
+                $value = self::get( $key );
+                if ( $value === '' ) {
+                    continue;
+                }
+                $preview_vars .= esc_attr( $field['property'] ) . ':' . esc_attr( $value ) . ';';
+            }
+        }
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Project Gallery Settings', 'lifex-project-gallery' ); ?></h1>
-            <form method="post" action="options.php">
-                <?php
-                settings_fields( 'lxpg_settings_group' );
-                do_settings_sections( 'lifex-project-gallery' );
-                submit_button();
-                ?>
-            </form>
+            <div style="display:flex;gap:40px;align-items:flex-start;">
+
+                <div style="flex:1;min-width:0;">
+                    <form method="post" action="options.php">
+                        <?php
+                        settings_fields( 'lxpg_settings_group' );
+                        do_settings_sections( 'lifex-project-gallery' );
+                        submit_button();
+                        ?>
+                    </form>
+                </div>
+
+                <div style="width:260px;flex-shrink:0;position:sticky;top:32px;">
+                    <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
+                        <?php esc_html_e( 'Card Preview', 'lifex-project-gallery' ); ?>
+                    </p>
+                    <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+                        <div id="lxpg-card-preview" class="lxpg-gallery" style="<?php echo $preview_vars; ?>">
+                            <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Default', 'lifex-project-gallery' ); ?></p>
+                            <article class="lxpg-card" style="margin-bottom:20px;">
+                                <a href="#" class="lxpg-card-link lxpg-no-hover" onclick="return false;">
+                                    <div class="lxpg-card-image-wrap"></div>
+                                    <div class="lxpg-card-caption">
+                                        <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
+                                    </div>
+                                </a>
+                            </article>
+                            <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'On Hover', 'lifex-project-gallery' ); ?></p>
+                            <article class="lxpg-card">
+                                <a href="#" class="lxpg-card-link lxpg-preview-hover" onclick="return false;">
+                                    <div class="lxpg-card-image-wrap"></div>
+                                    <div class="lxpg-card-caption">
+                                        <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
+                                    </div>
+                                </a>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
+        <style>
+            /* Suppress hover effect on the "Default" card so it stays static. */
+            #lxpg-card-preview .lxpg-no-hover:hover .lxpg-card-caption { background-color: var(--lxpg-card-caption-bg) !important; }
+            #lxpg-card-preview .lxpg-no-hover:hover .lxpg-card-label   { color: var(--lxpg-card-text) !important; text-decoration: none !important; }
+            /* Force hover appearance on the "On Hover" card permanently. */
+            #lxpg-card-preview .lxpg-preview-hover .lxpg-card-caption  { background-color: var(--lxpg-caption-hover-bg); }
+            #lxpg-card-preview .lxpg-preview-hover .lxpg-card-label    { color: var(--lxpg-caption-hover-text); text-decoration: underline; text-decoration-color: var(--lxpg-caption-underline); }
+        </style>
         <?php
     }
 

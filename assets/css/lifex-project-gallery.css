@@ -163,7 +163,9 @@
   overflow: hidden;
 }
 
-.lxpg-card-link {
+.lxpg-card-link,
+.lxpg-card-link:hover,
+.lxpg-card-link:focus-visible {
   display: block;
   text-decoration: none;
   color: inherit;
