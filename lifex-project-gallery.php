@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LXPG_VERSION', '2.0.0' );
+define( 'LXPG_VERSION', '2.0.1' );
 define( 'LXPG_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'LXPG_URL',     plugins_url( '/', __FILE__ ) );
 define( 'LXPG_FILE',    __FILE__ );

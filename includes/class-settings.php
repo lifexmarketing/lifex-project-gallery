@@ -517,24 +517,30 @@ class LXPG_Settings {
         </p>
         <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
             <div data-lxpg-preview class="lxpg-gallery" style="<?php echo $pv; ?>">
-                <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Default', 'lifex-project-gallery' ); ?></p>
-                <article class="lxpg-card" style="margin-bottom:20px;">
-                    <a href="#" class="lxpg-card-link lxpg-no-hover" onclick="return false;">
-                        <div class="lxpg-card-image-wrap"></div>
-                        <div class="lxpg-card-caption">
-                            <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
-                        </div>
-                    </a>
-                </article>
-                <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'On Hover', 'lifex-project-gallery' ); ?></p>
-                <article class="lxpg-card">
-                    <a href="#" class="lxpg-card-link lxpg-card-hover-state" onclick="return false;">
-                        <div class="lxpg-card-image-wrap"></div>
-                        <div class="lxpg-card-caption">
-                            <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
-                        </div>
-                    </a>
-                </article>
+                <div style="display:flex;gap:10px;">
+                    <div style="flex:1;min-width:0;">
+                        <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Default', 'lifex-project-gallery' ); ?></p>
+                        <article class="lxpg-card">
+                            <a href="#" class="lxpg-card-link lxpg-no-hover" onclick="return false;">
+                                <div class="lxpg-card-image-wrap"></div>
+                                <div class="lxpg-card-caption">
+                                    <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'On Hover', 'lifex-project-gallery' ); ?></p>
+                        <article class="lxpg-card">
+                            <a href="#" class="lxpg-card-link lxpg-card-hover-state" onclick="return false;">
+                                <div class="lxpg-card-image-wrap"></div>
+                                <div class="lxpg-card-caption">
+                                    <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                </div>
             </div>
         </div>
         <?php
