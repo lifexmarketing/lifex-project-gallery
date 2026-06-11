@@ -17,6 +17,7 @@
   --lxpg-card-caption-bg:   #1f2937;
   --lxpg-caption-hover-bg:  #374151;
   --lxpg-caption-hover-text: #ffffff;
+  --lxpg-caption-underline:  transparent;
   --lxpg-grid-gap:        16px;
   --lxpg-filter-border:   #d1d5db;
   --lxpg-filter-bg:       #ffffff;
@@ -218,6 +219,8 @@
 .lxpg-card-link:hover .lxpg-card-label,
 .lxpg-card-link:focus-visible .lxpg-card-label {
   color: var(--lxpg-caption-hover-text);
+  text-decoration: underline;
+  text-decoration-color: var(--lxpg-caption-underline);
 }
 
 /* Focus visible outline for keyboard users */

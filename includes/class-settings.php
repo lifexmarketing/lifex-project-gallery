@@ -58,6 +58,13 @@ class LXPG_Settings {
                     'default'  => '#ffffff',
                     'property' => '--lxpg-caption-hover-text',
                 ],
+                'css_caption_underline' => [
+                    'label'    => 'Caption Hover Underline Color',
+                    'type'     => 'text',
+                    'default'  => '',
+                    'property' => '--lxpg-caption-underline',
+                    'hint'     => 'Enter a CSS color (e.g. #ffffff) to show an underline on hover. Leave empty for none.',
+                ],
             ],
         ],
         'filters' => [
