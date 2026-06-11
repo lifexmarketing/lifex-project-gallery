@@ -19,7 +19,6 @@ define( 'LXPG_URL',     plugins_url( '/', __FILE__ ) );
 define( 'LXPG_FILE',    __FILE__ );
 
 require_once LXPG_DIR . 'includes/class-post-type.php';
-require_once LXPG_DIR . 'includes/class-meta-boxes.php';
 require_once LXPG_DIR . 'includes/class-settings.php';
 require_once LXPG_DIR . 'includes/class-assets.php';
 require_once LXPG_DIR . 'includes/class-shortcode.php';
@@ -27,7 +26,6 @@ require_once LXPG_DIR . 'includes/class-single-template.php';
 
 add_action( 'plugins_loaded', function (): void {
     new LXPG_Post_Type();
-    new LXPG_Meta_Boxes();
     new LXPG_Settings();
     new LXPG_Assets();
     new LXPG_Shortcode();
