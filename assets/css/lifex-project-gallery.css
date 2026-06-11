@@ -30,8 +30,6 @@
   --lxpg-cta-text:        #ffffff;
   --lxpg-cta-btn-bg:      #ffffff;
   --lxpg-cta-btn-text:    #1f2937;
-  --lxpg-share-bg:        #4b5563;
-  --lxpg-share-hover-bg:  #1f2937;
   --lxpg-lb-bg:           rgba(0, 0, 0, 0.92);
   --lxpg-lb-text:         #ffffff;
 }
@@ -283,6 +281,7 @@
   margin-bottom: 24px;
 }
 
+.lxpg-single-acf-fields,
 .lxpg-single-meta {
   list-style: none;
   padding: 0;
@@ -291,6 +290,10 @@
   flex-direction: column;
   gap: 6px;
   font-size: 15px;
+}
+
+.lxpg-single-acf-fields {
+  margin-bottom: 20px;
 }
 
 /* Social sharing */
@@ -315,10 +318,9 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--lxpg-share-bg);
   color: #ffffff;
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  transition: filter 0.2s ease;
   flex-shrink: 0;
 }
 
@@ -329,9 +331,13 @@
   stroke: none;
 }
 
+.lxpg-share-btn--facebook  { background-color: #3b5998; }
+.lxpg-share-btn--x         { background-color: #1da1f2; }
+.lxpg-share-btn--pinterest { background-color: #bd081c; }
+
 .lxpg-share-btn:hover,
 .lxpg-share-btn:focus-visible {
-  background-color: var(--lxpg-share-hover-bg);
+  filter: brightness(0.85);
 }
 
 .lxpg-share-btn:focus-visible {

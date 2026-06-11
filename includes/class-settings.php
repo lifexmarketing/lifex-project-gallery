@@ -115,23 +115,6 @@ class LXPG_Settings {
                 ],
             ],
         ],
-        'share' => [
-            'label'  => 'Share Buttons',
-            'fields' => [
-                'css_share_bg' => [
-                    'label'    => 'Share Button Background',
-                    'type'     => 'color',
-                    'default'  => '#4b5563',
-                    'property' => '--lxpg-share-bg',
-                ],
-                'css_share_hover_bg' => [
-                    'label'    => 'Share Button Hover Background',
-                    'type'     => 'color',
-                    'default'  => '#1f2937',
-                    'property' => '--lxpg-share-hover-bg',
-                ],
-            ],
-        ],
         'lightbox' => [
             'label'  => 'Lightbox',
             'fields' => [
@@ -147,6 +130,17 @@ class LXPG_Settings {
                     'type'     => 'color',
                     'default'  => '#ffffff',
                     'property' => '--lxpg-lb-text',
+                ],
+            ],
+        ],
+        'single_content' => [
+            'label'  => 'Single Project Content',
+            'fields' => [
+                'project_detail_fields' => [
+                    'label'   => 'ACF Detail Fields',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'Comma-separated ACF field names to display after project content, in order. e.g. project_sqft, project_manufacturer. Labels are pulled from the ACF field definition.',
                 ],
             ],
         ],

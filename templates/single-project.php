@@ -70,6 +70,26 @@ if ( function_exists( 'get_field' ) ) {
 
 $has_gallery = ! empty( $gallery );
 
+// ── ACF detail fields (configured in Settings > Single Project Content) ───────
+$detail_rows = [];
+$detail_fields_raw = LXPG_Settings::get( 'project_detail_fields', '' );
+if ( $detail_fields_raw !== '' && function_exists( 'get_field' ) ) {
+    foreach ( array_filter( array_map( 'trim', explode( ',', $detail_fields_raw ) ) ) as $field_name ) {
+        $field_name = sanitize_key( $field_name );
+        $value      = get_field( $field_name, $post_id );
+        if ( ! is_scalar( $value ) || $value === '' || $value === false ) {
+            continue;
+        }
+        $field_obj      = get_field_object( $field_name, $post_id );
+        $detail_rows[]  = [
+            'label' => ( $field_obj && ! empty( $field_obj['label'] ) )
+                ? $field_obj['label']
+                : ucwords( str_replace( [ '_', '-' ], ' ', $field_name ) ),
+            'value' => (string) $value,
+        ];
+    }
+}
+
 // ── Settings ──────────────────────────────────────────────────────────────────
 $cta_page_id    = (int) LXPG_Settings::get( 'cta_page_id', 0 );
 $cta_url        = $cta_page_id ? get_permalink( $cta_page_id ) : '';
@@ -129,6 +149,14 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
                 <div class="lxpg-single-content">
                     <?php the_content(); ?>
                 </div>
+
+                <?php if ( ! empty( $detail_rows ) ) : ?>
+                <ul class="lxpg-single-acf-fields">
+                    <?php foreach ( $detail_rows as $row ) : ?>
+                        <li><strong><?php echo esc_html( $row['label'] ); ?>:</strong> <?php echo esc_html( $row['value'] ); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
 
                 <ul class="lxpg-single-meta">
                     <?php if ( $project_id ) : ?>
@@ -207,6 +235,13 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
                 <p class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></p>
             <?php endif; ?>
             <div class="lxpg-single-content"><?php the_content(); ?></div>
+            <?php if ( ! empty( $detail_rows ) ) : ?>
+            <ul class="lxpg-single-acf-fields">
+                <?php foreach ( $detail_rows as $row ) : ?>
+                    <li><strong><?php echo esc_html( $row['label'] ); ?>:</strong> <?php echo esc_html( $row['value'] ); ?></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
             <ul class="lxpg-single-meta">
                 <?php if ( $project_id ) : ?>
                     <li><strong><?php esc_html_e( 'ID:', 'lifex-project-gallery' ); ?></strong> <?php echo $project_id; ?></li>
