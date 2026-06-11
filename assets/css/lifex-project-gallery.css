@@ -13,9 +13,10 @@
   --lxpg-font:            inherit;
   --lxpg-radius:          4px;
   --lxpg-card-ratio:      3 / 2;
-  --lxpg-card-overlay-bg:  rgba(0, 0, 0, 0.62);
-  --lxpg-card-text:        #ffffff;
-  --lxpg-card-caption-bg:  #1f2937;
+  --lxpg-card-text:          #ffffff;
+  --lxpg-card-caption-bg:   #1f2937;
+  --lxpg-caption-hover-bg:  #374151;
+  --lxpg-caption-hover-text: #ffffff;
   --lxpg-grid-gap:        16px;
   --lxpg-filter-border:   #d1d5db;
   --lxpg-filter-bg:       #ffffff;
@@ -197,6 +198,7 @@
   background-color: var(--lxpg-card-caption-bg);
   padding: 10px 16px;
   text-align: center;
+  transition: background-color 0.2s ease;
 }
 
 .lxpg-card-label {
@@ -205,6 +207,17 @@
   font-weight: 700;
   margin: 0;
   line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.lxpg-card-link:hover .lxpg-card-caption,
+.lxpg-card-link:focus-visible .lxpg-card-caption {
+  background-color: var(--lxpg-caption-hover-bg);
+}
+
+.lxpg-card-link:hover .lxpg-card-label,
+.lxpg-card-link:focus-visible .lxpg-card-label {
+  color: var(--lxpg-caption-hover-text);
 }
 
 /* Focus visible outline for keyboard users */

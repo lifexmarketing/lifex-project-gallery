@@ -19,28 +19,9 @@ class LXPG_Settings {
      * are content settings (strings, page IDs) not output as CSS.
      */
     private const SECTIONS = [
-        'global' => [
-            'label'  => 'Global',
-            'fields' => [
-                'css_radius' => [
-                    'label'    => 'Border Radius',
-                    'type'     => 'text',
-                    'default'  => '4px',
-                    'property' => '--lxpg-radius',
-                    'hint'     => 'Applied to cards, buttons, and selects. e.g. 4px or 0.5rem',
-                ],
-            ],
-        ],
         'grid' => [
             'label'  => 'Gallery Grid',
             'fields' => [
-                'css_grid_gap' => [
-                    'label'    => 'Card Gap',
-                    'type'     => 'text',
-                    'default'  => '1rem',
-                    'property' => '--lxpg-grid-gap',
-                    'hint'     => 'Space between cards. e.g. 1rem or 16px',
-                ],
                 'css_card_ratio' => [
                     'label'    => 'Image Aspect Ratio',
                     'type'     => 'select',
@@ -53,18 +34,29 @@ class LXPG_Settings {
                         '1 / 1'   => 'Square',
                     ],
                 ],
-                'css_card_overlay_bg' => [
-                    'label'    => 'Hover Overlay Color',
-                    'type'     => 'rgba',
-                    'default'  => 'rgba(0,0,0,0.62)',
-                    'property' => '--lxpg-card-overlay-bg',
-                    'hint'     => 'Use rgba() to control opacity. e.g. rgba(0,0,0,0.6)',
+                'css_card_caption_bg' => [
+                    'label'    => 'Caption Background',
+                    'type'     => 'color',
+                    'default'  => '#1f2937',
+                    'property' => '--lxpg-card-caption-bg',
+                ],
+                'css_caption_hover_bg' => [
+                    'label'    => 'Caption Hover Background',
+                    'type'     => 'color',
+                    'default'  => '#374151',
+                    'property' => '--lxpg-caption-hover-bg',
                 ],
                 'css_card_text' => [
-                    'label'    => 'Overlay Text Color',
+                    'label'    => 'Caption Text Color',
                     'type'     => 'color',
                     'default'  => '#ffffff',
                     'property' => '--lxpg-card-text',
+                ],
+                'css_caption_hover_text' => [
+                    'label'    => 'Caption Hover Text Color',
+                    'type'     => 'color',
+                    'default'  => '#ffffff',
+                    'property' => '--lxpg-caption-hover-text',
                 ],
             ],
         ],
