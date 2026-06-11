@@ -41,15 +41,7 @@ class LXPG_Shortcode {
         // Build and run the query.
         $query = $this->build_query( $count, $preset_category, $active );
 
-        if ( ! $query->have_posts() ) {
-            wp_reset_postdata();
-            ob_start();
-            include LXPG_DIR . 'templates/partials/no-results.php';
-            return ob_get_clean();
-        }
-
-        // Sort: featured projects first, preserve relative menu_order within each group.
-        $posts = $this->sort_featured( $query->posts );
+        $posts = $query->have_posts() ? $this->sort_featured( $query->posts ) : [];
         wp_reset_postdata();
 
         ob_start();

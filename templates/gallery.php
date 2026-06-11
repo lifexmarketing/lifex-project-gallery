@@ -17,10 +17,14 @@ defined( 'ABSPATH' ) || exit;
         <?php include __DIR__ . '/partials/filter-bar.php'; ?>
     <?php endif; ?>
 
-    <div class="lxpg-grid" role="list">
-        <?php global $post; foreach ( $posts as $post ) : setup_postdata( $post ); ?>
-            <?php include __DIR__ . '/partials/project-card.php'; ?>
-        <?php endforeach; wp_reset_postdata(); ?>
-    </div>
+    <?php if ( empty( $posts ) ) : ?>
+        <?php include __DIR__ . '/partials/no-results.php'; ?>
+    <?php else : ?>
+        <div class="lxpg-grid" role="list">
+            <?php global $post; foreach ( $posts as $post ) : setup_postdata( $post ); ?>
+                <?php include __DIR__ . '/partials/project-card.php'; ?>
+            <?php endforeach; wp_reset_postdata(); ?>
+        </div>
+    <?php endif; ?>
 
 </div>
