@@ -506,6 +506,14 @@ class LXPG_Settings {
             /* Filter: lock Default button at rest state, lock Hover button at hover state. */
             [data-lxpg-preview] .lxpg-no-btn-hover:hover { background-color: var(--lxpg-btn-bg) !important; }
             [data-lxpg-preview] .lxpg-btn-hover-state     { background-color: var(--lxpg-btn-hover-bg); }
+            /* WP admin overrides <select> styles; force the plugin vars to win in the preview. */
+            [data-lxpg-preview] .lxpg-filter-select {
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                background-color: var(--lxpg-filter-bg) !important;
+                border: 1px solid var(--lxpg-filter-border) !important;
+                color: var(--lxpg-filter-text) !important;
+            }
         </style>
         <?php
     }
