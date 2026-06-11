@@ -440,9 +440,9 @@ class LXPG_Settings {
             return;
         }
 
-        // Build inline style string from currently saved settings so the preview
-        // reflects the saved state on page load before any JS runs.
-        $preview_vars = '';
+        // Collect every saved CSS var override so both preview containers start
+        // in sync with the currently saved state before any JS runs.
+        $pv = '';
         foreach ( self::SECTIONS as $section ) {
             foreach ( $section['fields'] as $key => $field ) {
                 if ( empty( $field['property'] ) ) {
@@ -452,62 +452,127 @@ class LXPG_Settings {
                 if ( $value === '' ) {
                     continue;
                 }
-                $preview_vars .= esc_attr( $field['property'] ) . ':' . esc_attr( $value ) . ';';
+                $pv .= esc_attr( $field['property'] ) . ':' . esc_attr( $value ) . ';';
             }
         }
+
+        // Sections that get a side preview and which renderer to use.
+        $previews = [ 'grid' => 'card', 'filters' => 'filter' ];
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Project Gallery Settings', 'lifex-project-gallery' ); ?></h1>
-            <div style="display:flex;gap:40px;align-items:flex-start;">
+            <form method="post" action="options.php">
+                <?php settings_fields( 'lxpg_settings_group' ); ?>
 
-                <div style="flex:1;min-width:0;">
-                    <form method="post" action="options.php">
+                <?php foreach ( self::SECTIONS as $section_id => $section ) :
+                    $preview_type = $previews[ $section_id ] ?? null;
+                ?>
+                <h2><?php echo esc_html( $section['label'] ); ?></h2>
+
+                <?php if ( $preview_type ) : ?>
+                <div style="display:flex;gap:40px;align-items:flex-start;">
+                    <div style="flex:1;min-width:0;">
+                <?php endif; ?>
+
+                        <table class="form-table" role="presentation"><tbody>
+                            <?php do_settings_fields( 'lifex-project-gallery', 'lxpg_' . $section_id ); ?>
+                        </tbody></table>
+
+                <?php if ( $preview_type ) : ?>
+                    </div>
+                    <div style="width:260px;flex-shrink:0;position:sticky;top:32px;">
                         <?php
-                        settings_fields( 'lxpg_settings_group' );
-                        do_settings_sections( 'lifex-project-gallery' );
-                        submit_button();
+                        if ( $preview_type === 'card' ) {
+                            $this->render_card_preview( $pv );
+                        } elseif ( $preview_type === 'filter' ) {
+                            $this->render_filter_preview( $pv );
+                        }
                         ?>
-                    </form>
-                </div>
-
-                <div style="width:260px;flex-shrink:0;position:sticky;top:32px;">
-                    <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
-                        <?php esc_html_e( 'Card Preview', 'lifex-project-gallery' ); ?>
-                    </p>
-                    <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
-                        <div id="lxpg-card-preview" class="lxpg-gallery" style="<?php echo $preview_vars; ?>">
-                            <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Default', 'lifex-project-gallery' ); ?></p>
-                            <article class="lxpg-card" style="margin-bottom:20px;">
-                                <a href="#" class="lxpg-card-link lxpg-no-hover" onclick="return false;">
-                                    <div class="lxpg-card-image-wrap"></div>
-                                    <div class="lxpg-card-caption">
-                                        <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
-                                    </div>
-                                </a>
-                            </article>
-                            <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'On Hover', 'lifex-project-gallery' ); ?></p>
-                            <article class="lxpg-card">
-                                <a href="#" class="lxpg-card-link lxpg-preview-hover" onclick="return false;">
-                                    <div class="lxpg-card-image-wrap"></div>
-                                    <div class="lxpg-card-caption">
-                                        <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
-                                    </div>
-                                </a>
-                            </article>
-                        </div>
                     </div>
                 </div>
+                <?php endif; ?>
 
-            </div>
+                <?php endforeach; ?>
+
+                <?php submit_button(); ?>
+            </form>
         </div>
         <style>
-            /* Suppress hover effect on the "Default" card so it stays static. */
-            #lxpg-card-preview .lxpg-no-hover:hover .lxpg-card-caption { background-color: var(--lxpg-card-caption-bg) !important; }
-            #lxpg-card-preview .lxpg-no-hover:hover .lxpg-card-label   { color: var(--lxpg-card-text) !important; text-decoration: none !important; }
-            /* Force hover appearance on the "On Hover" card permanently. */
-            #lxpg-card-preview .lxpg-preview-hover .lxpg-card-caption  { background-color: var(--lxpg-caption-hover-bg); }
-            #lxpg-card-preview .lxpg-preview-hover .lxpg-card-label    { color: var(--lxpg-caption-hover-text); text-decoration: underline; text-decoration-color: var(--lxpg-caption-underline); }
+            /* Card: lock Default card at rest state, lock Hover card at hover state. */
+            [data-lxpg-preview] .lxpg-no-hover:hover .lxpg-card-caption { background-color: var(--lxpg-card-caption-bg) !important; }
+            [data-lxpg-preview] .lxpg-no-hover:hover .lxpg-card-label   { color: var(--lxpg-card-text) !important; text-decoration: none !important; }
+            [data-lxpg-preview] .lxpg-card-hover-state .lxpg-card-caption { background-color: var(--lxpg-caption-hover-bg); }
+            [data-lxpg-preview] .lxpg-card-hover-state .lxpg-card-label   { color: var(--lxpg-caption-hover-text); text-decoration: underline; text-decoration-color: var(--lxpg-caption-underline); }
+            /* Filter: lock Default button at rest state, lock Hover button at hover state. */
+            [data-lxpg-preview] .lxpg-no-btn-hover:hover { background-color: var(--lxpg-btn-bg) !important; }
+            [data-lxpg-preview] .lxpg-btn-hover-state     { background-color: var(--lxpg-btn-hover-bg); }
         </style>
+        <?php
+    }
+
+    private function render_card_preview( string $pv ): void {
+        ?>
+        <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
+            <?php esc_html_e( 'Card Preview', 'lifex-project-gallery' ); ?>
+        </p>
+        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+            <div data-lxpg-preview class="lxpg-gallery" style="<?php echo $pv; ?>">
+                <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Default', 'lifex-project-gallery' ); ?></p>
+                <article class="lxpg-card" style="margin-bottom:20px;">
+                    <a href="#" class="lxpg-card-link lxpg-no-hover" onclick="return false;">
+                        <div class="lxpg-card-image-wrap"></div>
+                        <div class="lxpg-card-caption">
+                            <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
+                        </div>
+                    </a>
+                </article>
+                <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'On Hover', 'lifex-project-gallery' ); ?></p>
+                <article class="lxpg-card">
+                    <a href="#" class="lxpg-card-link lxpg-card-hover-state" onclick="return false;">
+                        <div class="lxpg-card-image-wrap"></div>
+                        <div class="lxpg-card-caption">
+                            <p class="lxpg-card-label"><?php esc_html_e( 'Sample Project', 'lifex-project-gallery' ); ?></p>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function render_filter_preview( string $pv ): void {
+        ?>
+        <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
+            <?php esc_html_e( 'Filter Preview', 'lifex-project-gallery' ); ?>
+        </p>
+        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+            <div data-lxpg-preview class="lxpg-gallery" style="<?php echo $pv; ?>">
+                <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Default', 'lifex-project-gallery' ); ?></p>
+                <div class="lxpg-filters" style="flex-direction:column;margin-bottom:20px;">
+                    <div class="lxpg-filter-item" style="min-width:0;">
+                        <select class="lxpg-filter-select">
+                            <option><?php esc_html_e( 'Any Category', 'lifex-project-gallery' ); ?></option>
+                            <option><?php esc_html_e( 'Commercial', 'lifex-project-gallery' ); ?></option>
+                            <option><?php esc_html_e( 'Residential', 'lifex-project-gallery' ); ?></option>
+                        </select>
+                    </div>
+                    <div class="lxpg-filter-item" style="min-width:0;">
+                        <button type="button" class="lxpg-filter-btn lxpg-no-btn-hover"><?php esc_html_e( 'Filter', 'lifex-project-gallery' ); ?></button>
+                    </div>
+                </div>
+                <p style="font-size:11px;color:#646970;margin:0 0 6px;font-weight:600;"><?php esc_html_e( 'Button Hover', 'lifex-project-gallery' ); ?></p>
+                <div class="lxpg-filters" style="flex-direction:column;">
+                    <div class="lxpg-filter-item" style="min-width:0;">
+                        <select class="lxpg-filter-select">
+                            <option><?php esc_html_e( 'Any Category', 'lifex-project-gallery' ); ?></option>
+                        </select>
+                    </div>
+                    <div class="lxpg-filter-item" style="min-width:0;">
+                        <button type="button" class="lxpg-filter-btn lxpg-btn-hover-state"><?php esc_html_e( 'Filter', 'lifex-project-gallery' ); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php
     }
 

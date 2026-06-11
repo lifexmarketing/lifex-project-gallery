@@ -1,20 +1,24 @@
 /**
- * Admin settings page: color pickers + live card preview.
+ * Admin settings page: color pickers + live card/filter previews.
  * Loaded only on the Project Gallery settings page.
  */
 ( function ( $ ) {
 	'use strict';
 
 	$( document ).ready( function () {
-		const preview = document.getElementById( 'lxpg-card-preview' );
+		// All preview containers share the same CSS var pool, so updating any
+		// setting propagates to every preview on the page at once.
+		const previews = document.querySelectorAll( '[data-lxpg-preview]' );
 
 		function setProp( prop, value ) {
-			if ( ! preview || ! prop ) return;
-			if ( value === '' || value == null ) {
-				preview.style.removeProperty( prop );
-			} else {
-				preview.style.setProperty( prop, value );
-			}
+			if ( ! prop ) return;
+			previews.forEach( function ( preview ) {
+				if ( value === '' || value == null ) {
+					preview.style.removeProperty( prop );
+				} else {
+					preview.style.setProperty( prop, value );
+				}
+			} );
 		}
 
 		// Color pickers — pass a change callback so the preview updates as the
