@@ -19,11 +19,13 @@ class LXPG_Shortcode {
             'filter_fields' => '',
             'count'         => -1,
             'category'      => '',
+            'card_label'    => 'title',
         ], array_change_key_case( (array) $atts, CASE_LOWER ), 'project-gallery' );
 
         $show_filters    = strtolower( $atts['filters'] ) === 'on';
         $count           = $atts['count'] == -1 ? -1 : absint( $atts['count'] );
         $preset_category = sanitize_title( $atts['category'] );
+        $card_label      = in_array( $atts['card_label'], [ 'title', 'project_id' ], true ) ? $atts['card_label'] : 'title';
 
         // Parse filter_fields into taxonomy slugs and reserved keywords.
         $filter_fields = [];

@@ -2,14 +2,14 @@
 /**
  * Single project card for the gallery grid.
  * $post is set via setup_postdata() in the parent loop.
+ * $card_label is inherited from the shortcode scope: 'title' or 'project_id'.
  */
 defined( 'ABSPATH' ) || exit;
 
-$project_id  = esc_html( get_post_meta( get_the_ID(), 'project_id', true ) );
-$permalink   = get_the_permalink();
-$title       = get_the_title();
-$thumb_src   = get_the_post_thumbnail_url( null, 'project-gallery' );
-$thumb_alt   = $title;
+$permalink = get_the_permalink();
+$title     = get_the_title();
+$thumb_src = get_the_post_thumbnail_url( null, 'project-gallery' );
+$thumb_alt = $title;
 
 // Fall back to first ACF additional image if no featured image.
 if ( ! $thumb_src && function_exists( 'get_field' ) ) {
@@ -18,6 +18,16 @@ if ( ! $thumb_src && function_exists( 'get_field' ) ) {
         $thumb_src = $additional[0]['sizes']['project-gallery'] ?? $additional[0]['url'];
         $thumb_alt = $additional[0]['alt'] ?: $title;
     }
+}
+
+// Determine the caption label.
+if ( ( $card_label ?? 'title' ) === 'project_id' ) {
+    $raw_id     = get_post_meta( get_the_ID(), 'project_id', true );
+    $label_text = $raw_id
+        ? sprintf( __( 'Project #%s', 'lifex-project-gallery' ), $raw_id )
+        : $title;
+} else {
+    $label_text = $title;
 }
 
 $has_image = (bool) $thumb_src;
@@ -41,20 +51,10 @@ $has_image = (bool) $thumb_src;
             <?php else : ?>
                 <div class="lxpg-card-no-image" aria-hidden="true"></div>
             <?php endif; ?>
+        </div>
 
-            <div class="lxpg-card-overlay" aria-hidden="true">
-                <div class="lxpg-card-meta">
-                    <p class="lxpg-card-title"><?php echo esc_html( $title ); ?></p>
-                    <?php if ( $project_id ) : ?>
-                        <p class="lxpg-card-id">
-                            <?php
-                            /* translators: %s is the numeric project ID */
-                            printf( esc_html__( 'Project #%s', 'lifex-project-gallery' ), $project_id );
-                            ?>
-                        </p>
-                    <?php endif; ?>
-                </div>
-            </div>
+        <div class="lxpg-card-caption">
+            <p class="lxpg-card-label"><?php echo esc_html( $label_text ); ?></p>
         </div>
 
     </a>
