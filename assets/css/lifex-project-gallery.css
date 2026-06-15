@@ -525,6 +525,51 @@
   border-radius: var(--lxpg-radius);
 }
 
+/* ── Pagination ──────────────────────────────────────────────────────────── */
+.lxpg-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.lxpg-pagination-prev,
+.lxpg-pagination-next {
+  flex: 0 1 48%;
+}
+
+.lxpg-pagination-next {
+  text-align: right;
+  margin-left: auto;
+}
+
+.lxpg-pagination-prev a,
+.lxpg-pagination-next a {
+  text-decoration: none;
+  color: #222;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lxpg-pagination-prev a:hover,
+.lxpg-pagination-next a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .lxpg-pagination {
+    flex-direction: column;
+  }
+
+  .lxpg-pagination-next {
+    text-align: left;
+    margin-left: 0;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    LIGHTBOX
    ═══════════════════════════════════════════════════════════════════════════ */

@@ -25,7 +25,7 @@ class LXPG_Settings {
                 'css_card_ratio' => [
                     'label'    => 'Image Aspect Ratio',
                     'type'     => 'select',
-                    'default'  => '3 / 2',
+                    'default'  => '1 / 1',
                     'property' => '--lxpg-card-ratio',
                     'options'  => [
                         '3 / 2'   => 'Landscape 3:2 (default)',
@@ -139,14 +139,20 @@ class LXPG_Settings {
                 'subtitle_template' => [
                     'label'   => 'Subtitle Template',
                     'type'    => 'text',
-                    'default' => '',
+                    'default' => '[category] Project',
                     'hint'    => 'Build the subtitle using [bracket] tokens. e.g. [category] Project in [project_city]. Tokens resolve in order: [category] = primary category, any taxonomy slug, then any ACF field name. Unresolved tokens are removed; if none resolve the subtitle is hidden.',
                 ],
                 'project_detail_fields' => [
                     'label'   => 'ACF Detail Fields',
                     'type'    => 'text',
-                    'default' => '',
+                    'default' => 'project_id',
                     'hint'    => 'Comma-separated ACF field names to display after project content, in order. e.g. project_sqft, project_manufacturer. Labels are pulled from the ACF field definition.',
+                ],
+                'pagination_enabled' => [
+                    'label'   => 'Enable Project Pagination',
+                    'type'    => 'checkbox',
+                    'default' => '',
+                    'hint'    => 'Show previous / next project links at the bottom of each single project page.',
                 ],
             ],
         ],
@@ -163,11 +169,33 @@ class LXPG_Settings {
                     'type'    => 'text',
                     'default' => 'Visit This Website',
                 ],
+                'content_cta_link_type' => [
+                    'label'   => 'Link Type',
+                    'type'    => 'select',
+                    'default' => 'acf',
+                    'options' => [
+                        'acf'   => 'ACF Field (per-project)',
+                        'url'   => 'Static Link',
+                        'phone' => 'Phone Number',
+                    ],
+                ],
                 'content_cta_acf_field' => [
                     'label'   => 'ACF Field for URL',
                     'type'    => 'text',
                     'default' => '',
                     'hint'    => 'ACF field name on the project post that holds the destination URL (e.g. project_website).',
+                ],
+                'content_cta_static_url' => [
+                    'label'   => 'Static URL',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'URL used for all projects when Link Type is "Static Link" (e.g. https://example.com/contact).',
+                ],
+                'content_cta_phone' => [
+                    'label'   => 'Phone Number',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'Phone number to dial when Link Type is "Phone Number" (e.g. 555-867-5309).',
                 ],
                 'content_cta_bg' => [
                     'label'    => 'Button Background',
@@ -207,7 +235,7 @@ class LXPG_Settings {
                 'cta_heading' => [
                     'label'   => 'Heading',
                     'type'    => 'text',
-                    'default' => 'Love This Project?',
+                    'default' => 'Love This Project? Get Started on Yours Today?',
                 ],
                 'cta_button_text' => [
                     'label'   => 'Button Text',
@@ -650,8 +678,8 @@ class LXPG_Settings {
         <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
             <?php esc_html_e( 'CTA Preview', 'lifex-project-gallery' ); ?>
         </p>
-        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;max-width: 400px;">
-            <div data-lxpg-preview style="<?php echo $pv; ?>;max-width:380px;">
+        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+            <div data-lxpg-preview style="<?php echo $pv; ?>;">
                 <div class="lxpg-cta">
                     <div class="lxpg-cta-inner">
                         <div class="lxpg-cta-text">

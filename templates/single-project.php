@@ -135,17 +135,31 @@ if ( $detail_fields_raw !== '' && function_exists( 'get_field' ) ) {
 // ── Settings ──────────────────────────────────────────────────────────────────
 $cta_page_id    = (int) LXPG_Settings::get( 'cta_page_id', 0 );
 $cta_url        = $cta_page_id ? get_permalink( $cta_page_id ) : '';
-$cta_heading    = LXPG_Settings::get( 'cta_heading',     'Love This Project?' );
+$cta_heading    = LXPG_Settings::get( 'cta_heading',     'Love This Project? Get Started on Yours Today?' );
 $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
 
 // ── Inline content CTA ────────────────────────────────────────────────────────
-$content_cta_url = '';
-if ( LXPG_Settings::get( 'content_cta_enabled', '' ) === '1' && function_exists( 'get_field' ) ) {
-    $content_cta_field = LXPG_Settings::get( 'content_cta_acf_field', '' );
-    if ( $content_cta_field !== '' ) {
-        $raw_url = get_field( sanitize_key( $content_cta_field ), $post_id );
-        if ( is_string( $raw_url ) && $raw_url !== '' ) {
-            $content_cta_url = $raw_url;
+$content_cta_url    = '';
+$content_cta_target = '_blank';
+$content_cta_rel    = 'noopener noreferrer';
+if ( LXPG_Settings::get( 'content_cta_enabled', '' ) === '1' ) {
+    $link_type = LXPG_Settings::get( 'content_cta_link_type', 'acf' );
+    if ( $link_type === 'url' ) {
+        $content_cta_url = LXPG_Settings::get( 'content_cta_static_url', '' );
+    } elseif ( $link_type === 'phone' ) {
+        $phone_raw = LXPG_Settings::get( 'content_cta_phone', '' );
+        if ( $phone_raw !== '' ) {
+            $content_cta_url    = 'tel:' . preg_replace( '/[^\d+]/', '', $phone_raw );
+            $content_cta_target = '';
+            $content_cta_rel    = '';
+        }
+    } elseif ( function_exists( 'get_field' ) ) {
+        $content_cta_field = LXPG_Settings::get( 'content_cta_acf_field', '' );
+        if ( $content_cta_field !== '' ) {
+            $raw_url = get_field( sanitize_key( $content_cta_field ), $post_id );
+            if ( is_string( $raw_url ) && $raw_url !== '' ) {
+                $content_cta_url = $raw_url;
+            }
         }
     }
 }
@@ -233,7 +247,7 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
 
                 <?php if ( $content_cta_url ) : ?>
                     <div class="lxpg-content-cta">
-                        <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
+                        <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link"<?php if ( $content_cta_target ) echo ' target="' . esc_attr( $content_cta_target ) . '" rel="' . esc_attr( $content_cta_rel ) . '"'; ?>>
                             <?php echo esc_html( $content_cta_text ); ?>
                         </a>
                     </div>
@@ -318,7 +332,7 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
             </ul>
             <?php if ( $content_cta_url ) : ?>
                 <div class="lxpg-content-cta">
-                    <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
+                    <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link"<?php if ( $content_cta_target ) echo ' target="' . esc_attr( $content_cta_target ) . '" rel="' . esc_attr( $content_cta_rel ) . '"'; ?>>
                         <?php echo esc_html( $content_cta_text ); ?>
                     </a>
                 </div>
@@ -364,6 +378,31 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
             ></iframe>
         </div>
     </div>
+    <?php endif; ?>
+
+    <?php
+    if ( LXPG_Settings::get( 'pagination_enabled', '' ) === '1' ) :
+        $prev_post = get_next_post();     // intentionally swapped: newest-first listing
+        $next_post = get_previous_post();
+        if ( $prev_post || $next_post ) :
+    ?>
+    <div class="lxpg-pagination">
+        <div class="lxpg-pagination-prev">
+            <?php if ( $prev_post ) : ?>
+                <a href="<?php echo esc_url( get_permalink( $prev_post->ID ) ); ?>">
+                    &lsaquo; <?php echo esc_html( $prev_post->post_title ); ?>
+                </a>
+            <?php endif; ?>
+        </div>
+        <div class="lxpg-pagination-next">
+            <?php if ( $next_post ) : ?>
+                <a href="<?php echo esc_url( get_permalink( $next_post->ID ) ); ?>">
+                    <?php echo esc_html( $next_post->post_title ); ?> &rsaquo;
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
     <?php endif; ?>
 
 </main>

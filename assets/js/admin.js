@@ -45,6 +45,7 @@
 		} );
 
 		// Collapse inline-CTA fields and preview when the enable checkbox is unchecked.
+		// When enabled, also show only the sub-field matching the selected link type.
 		const ctaCheckbox = document.getElementById( 'lxpg_content_cta_enabled' );
 		if ( ctaCheckbox ) {
 			const ctaRows = Array.from(
@@ -52,7 +53,19 @@
 			).filter( function ( row ) {
 				return ! row.contains( ctaCheckbox );
 			} );
-			const ctaPreview = document.getElementById( 'lxpg-content-cta-preview' );
+			const ctaPreview     = document.getElementById( 'lxpg-content-cta-preview' );
+			const linkTypeSelect = document.getElementById( 'lxpg_content_cta_link_type' );
+			const rowAcf         = document.getElementById( 'lxpg_content_cta_acf_field' )?.closest( 'tr' );
+			const rowUrl         = document.getElementById( 'lxpg_content_cta_static_url' )?.closest( 'tr' );
+			const rowPhone       = document.getElementById( 'lxpg_content_cta_phone' )?.closest( 'tr' );
+
+			function applyLinkType() {
+				if ( ! linkTypeSelect ) return;
+				const type = linkTypeSelect.value;
+				if ( rowAcf   ) rowAcf.style.display   = ( type === 'acf'   ) ? '' : 'none';
+				if ( rowUrl   ) rowUrl.style.display   = ( type === 'url'   ) ? '' : 'none';
+				if ( rowPhone ) rowPhone.style.display = ( type === 'phone' ) ? '' : 'none';
+			}
 
 			function toggleCtaFields() {
 				const visible = ctaCheckbox.checked;
@@ -62,10 +75,14 @@
 				if ( ctaPreview ) {
 					ctaPreview.style.display = visible ? '' : 'none';
 				}
+				if ( visible ) applyLinkType();
 			}
 
 			toggleCtaFields();
 			ctaCheckbox.addEventListener( 'change', toggleCtaFields );
+			if ( linkTypeSelect ) {
+				linkTypeSelect.addEventListener( 'change', applyLinkType );
+			}
 		}
 	} );
 } )( jQuery );
