@@ -136,6 +136,12 @@ class LXPG_Settings {
         'single_content' => [
             'label'  => 'Single Project Content',
             'fields' => [
+                'subtitle_template' => [
+                    'label'   => 'Subtitle Template',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'Build the subtitle using [bracket] tokens. e.g. [category] Project in [project_city]. Tokens resolve in order: [category] = primary category, any taxonomy slug, then any ACF field name. Unresolved tokens are removed; if none resolve the subtitle is hidden.',
+                ],
                 'project_detail_fields' => [
                     'label'   => 'ACF Detail Fields',
                     'type'    => 'text',

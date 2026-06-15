@@ -31,12 +31,52 @@ $price_min    = ( isset( $price_parts[0] ) && is_numeric( $price_parts[0] ) ) ? 
 $price_max    = ( isset( $price_parts[1] ) && is_numeric( $price_parts[1] ) ) ? number_format( (float) $price_parts[1] ) : '';
 
 // Primary category name
-$categories   = get_the_terms( $post_id, 'project_category' );
-$category     = ( ! is_wp_error( $categories ) && ! empty( $categories ) ) ? $categories[0]->name : '';
+$categories = get_the_terms( $post_id, 'project_category' );
 
-// Subtitle line
-$subtitle_parts = array_filter( [ $manufacturer, $color, $category ] );
-$subtitle       = implode( ' ', $subtitle_parts );
+// Subtitle — parsed from template
+$subtitle          = '';
+$subtitle_template = LXPG_Settings::get( 'subtitle_template', '' );
+if ( $subtitle_template !== '' ) {
+    $any_resolved = false;
+    $subtitle = preg_replace_callback(
+        '/\[([^\]]+)\]/',
+        function ( $matches ) use ( $post_id, $categories, &$any_resolved ) {
+            $token = trim( $matches[1] );
+
+            // 1. Reserved word: primary project_category term
+            if ( $token === 'category' ) {
+                if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+                    $any_resolved = true;
+                    return $categories[0]->name;
+                }
+                return '';
+            }
+
+            // 2. Custom taxonomy — first term
+            $terms = get_the_terms( $post_id, $token );
+            if ( $terms !== false && ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+                $any_resolved = true;
+                return $terms[0]->name;
+            }
+
+            // 3. ACF field
+            if ( function_exists( 'get_field' ) ) {
+                $value = get_field( $token, $post_id );
+                if ( is_scalar( $value ) && $value !== '' && $value !== false ) {
+                    $any_resolved = true;
+                    return (string) $value;
+                }
+            }
+
+            return '';
+        },
+        $subtitle_template
+    );
+
+    if ( ! $any_resolved ) {
+        $subtitle = '';
+    }
+}
 
 // ── Build gallery image list ──────────────────────────────────────────────────
 $gallery = [];
@@ -122,7 +162,7 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
 
                 <!-- Social sharing -->
                 <div class="lxpg-share" aria-label="<?php esc_attr_e( 'Share this project', 'lifex-project-gallery' ); ?>">
-                    <span class="lxpg-share-label"><?php esc_html_e( 'Share:', 'lifex-project-gallery' ); ?></span>
+                    <span class="lxpg-share-label"><?php esc_html_e( 'Share This Project:', 'lifex-project-gallery' ); ?></span>
 
                     <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode( $permalink ); ?>"
                        target="_blank" rel="noopener noreferrer"
