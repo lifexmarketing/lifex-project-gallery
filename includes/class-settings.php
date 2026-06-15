@@ -628,7 +628,7 @@ class LXPG_Settings {
     private function render_content_cta_preview( string $pv ): void {
         $enabled = self::get( 'content_cta_enabled', '' ) === '1';
         ?>
-        <div id="lxpg-content-cta-preview" style="display:<?php echo $enabled ? 'block' : 'none'; ?>;">
+        <div id="lxpg-content-cta-preview" style="display:<?php echo $enabled ? 'block' : 'none'; ?>;max-width: 400px;">
             <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
                 <?php esc_html_e( 'Inline CTA Preview', 'lifex-project-gallery' ); ?>
             </p>
@@ -650,15 +650,15 @@ class LXPG_Settings {
         <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
             <?php esc_html_e( 'CTA Preview', 'lifex-project-gallery' ); ?>
         </p>
-        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;max-width: 400px;">
             <div data-lxpg-preview style="<?php echo $pv; ?>;max-width:380px;">
                 <div class="lxpg-cta">
                     <div class="lxpg-cta-inner">
                         <div class="lxpg-cta-text">
-                            <span class="lxpg-cta-heading"><?php esc_html_e( 'Love This Project?', 'lifex-project-gallery' ); ?></span>
+                            <span class="lxpg-cta-heading"><?php echo esc_html( self::get( 'cta_heading', 'Love This Project?' ) ?: 'Love This Project?' ); ?></span>
                         </div>
                         <a href="#" class="lxpg-cta-link" onclick="return false;">
-                            <?php esc_html_e( 'Contact Us', 'lifex-project-gallery' ); ?>
+                            <?php echo esc_html( self::get( 'cta_button_text', 'Contact Us' ) ?: 'Contact Us' ); ?>
                         </a>
                     </div>
                 </div>
