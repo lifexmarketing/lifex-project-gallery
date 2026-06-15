@@ -277,12 +277,13 @@
 
 .lxpg-single-subtitle {
   font-size: 24px;
-  color: #6b7280;
+  color: #222;
   margin: 0 0 20px;
 }
 
 .lxpg-single-content {
   font-size: 20px;
+  color: #222;
   margin-bottom: 24px;
 }
 
@@ -299,6 +300,7 @@
 
 .lxpg-single-acf-fields {
   margin-bottom: 20px;
+  color: #222;
 }
 
 /* Social sharing */
