@@ -320,12 +320,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+  padding: 6px;
+  border-radius: 25px;
   color: #ffffff;
   text-decoration: none;
-  transition: filter 0.2s ease;
+  transition: filter 25ms ease-out;
   flex-shrink: 0;
 }
 
@@ -597,7 +596,6 @@ body.lxpg-lb-open {
 }
 
 /* Close / prev / next buttons */
-.lxpg-lb-close,
 .lxpg-lb-prev,
 .lxpg-lb-next {
   appearance: none;
@@ -614,26 +612,15 @@ body.lxpg-lb-open {
   padding: 0;
 }
 
-.lxpg-lb-close:hover,
 .lxpg-lb-prev:hover,
 .lxpg-lb-next:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
-.lxpg-lb-close:focus-visible,
 .lxpg-lb-prev:focus-visible,
 .lxpg-lb-next:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
-}
-
-.lxpg-lb-close {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 36px;
-  height: 36px;
-  z-index: 2;
 }
 
 .lxpg-lb-prev,
@@ -642,7 +629,6 @@ body.lxpg-lb-open {
   height: 44px;
 }
 
-.lxpg-lb-close svg,
 .lxpg-lb-prev svg,
 .lxpg-lb-next svg {
   width: 20px;

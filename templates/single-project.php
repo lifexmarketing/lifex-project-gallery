@@ -163,14 +163,6 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
                     <?php the_content(); ?>
                 </div>
 
-                <?php if ( $content_cta_url ) : ?>
-                    <div class="lxpg-content-cta">
-                        <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
-                            <?php echo esc_html( $content_cta_text ); ?>
-                        </a>
-                    </div>
-                <?php endif; ?>
-
                 <?php if ( ! empty( $detail_rows ) ) : ?>
                 <ul class="lxpg-single-acf-fields">
                     <?php foreach ( $detail_rows as $row ) : ?>
@@ -196,6 +188,14 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
                         <li><strong><?php esc_html_e( 'Price Range:', 'lifex-project-gallery' ); ?></strong> $<?php echo $price_min; ?> &ndash; $<?php echo $price_max; ?></li>
                     <?php endif; ?>
                 </ul>
+
+                <?php if ( $content_cta_url ) : ?>
+                    <div class="lxpg-content-cta">
+                        <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
+                            <?php echo esc_html( $content_cta_text ); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- Right: gallery -->
@@ -256,13 +256,6 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
                 <h2 class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></h2>
             <?php endif; ?>
             <div class="lxpg-single-content"><?php the_content(); ?></div>
-            <?php if ( $content_cta_url ) : ?>
-                <div class="lxpg-content-cta">
-                    <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
-                        <?php echo esc_html( $content_cta_text ); ?>
-                    </a>
-                </div>
-            <?php endif; ?>
             <?php if ( ! empty( $detail_rows ) ) : ?>
             <ul class="lxpg-single-acf-fields">
                 <?php foreach ( $detail_rows as $row ) : ?>
@@ -281,6 +274,13 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
                     <li><strong><?php esc_html_e( 'Price Range:', 'lifex-project-gallery' ); ?></strong> $<?php echo $price_min; ?> &ndash; $<?php echo $price_max; ?></li>
                 <?php endif; ?>
             </ul>
+            <?php if ( $content_cta_url ) : ?>
+                <div class="lxpg-content-cta">
+                    <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
+                        <?php echo esc_html( $content_cta_text ); ?>
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
 
         <?php endif; ?>

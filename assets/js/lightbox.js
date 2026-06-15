@@ -27,10 +27,7 @@
 
 			el.innerHTML = `
 				<div class="lxpg-lb-backdrop"></div>
-				<div class="lxpg-lb-dialog">
-					<button class="lxpg-lb-close" aria-label="Close lightbox" type="button">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-					</button>
+				<div class="lxpg-lb-dialog" tabindex="-1">
 					<button class="lxpg-lb-prev" aria-label="Previous image" type="button">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="15 18 9 12 15 6"/></svg>
 					</button>
@@ -46,7 +43,6 @@
 			`;
 
 			el.querySelector( '.lxpg-lb-backdrop' ).addEventListener( 'click', () => this.close() );
-			el.querySelector( '.lxpg-lb-close'    ).addEventListener( 'click', () => this.close() );
 			el.querySelector( '.lxpg-lb-prev'     ).addEventListener( 'click', () => this.prev() );
 			el.querySelector( '.lxpg-lb-next'     ).addEventListener( 'click', () => this.next() );
 
@@ -70,7 +66,7 @@
 			this.el.classList.add( 'is-open' );
 			document.body.classList.add( 'lxpg-lb-open' );
 			this._update();
-			this.el.querySelector( '.lxpg-lb-close' ).focus();
+			this.el.querySelector( '.lxpg-lb-dialog' ).focus();
 		}
 
 		close() {

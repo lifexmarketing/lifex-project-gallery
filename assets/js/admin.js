@@ -43,5 +43,24 @@
 		$( '[data-lxpg-prop]' ).not( '.lxpg-color-field' ).on( 'change input', function () {
 			setProp( $( this ).attr( 'data-lxpg-prop' ), $( this ).val() );
 		} );
+
+		// Collapse inline-CTA fields when the enable checkbox is unchecked.
+		const ctaCheckbox = document.getElementById( 'lxpg_content_cta_enabled' );
+		if ( ctaCheckbox ) {
+			const ctaRows = Array.from(
+				ctaCheckbox.closest( 'table' ).querySelectorAll( 'tr' )
+			).filter( function ( row ) {
+				return ! row.contains( ctaCheckbox );
+			} );
+
+			function toggleCtaFields() {
+				ctaRows.forEach( function ( row ) {
+					row.style.display = ctaCheckbox.checked ? '' : 'none';
+				} );
+			}
+
+			toggleCtaFields();
+			ctaCheckbox.addEventListener( 'change', toggleCtaFields );
+		}
 	} );
 } )( jQuery );
