@@ -32,6 +32,10 @@
   --lxpg-cta-btn-text:    #1f2937;
   --lxpg-lb-bg:           rgba(0, 0, 0, 0.92);
   --lxpg-lb-text:         #ffffff;
+  --lxpg-content-cta-bg:          #1f2937;
+  --lxpg-content-cta-color:       #ffffff;
+  --lxpg-content-cta-hover-bg:    #374151;
+  --lxpg-content-cta-hover-color: #ffffff;
 }
 
 /* ── Accessibility utilities ─────────────────────────────────────────────── */
@@ -272,12 +276,13 @@
 }
 
 .lxpg-single-subtitle {
-  font-size: 36px;
+  font-size: 24px;
   color: #6b7280;
   margin: 0 0 20px;
 }
 
 .lxpg-single-content {
+  font-size: 20px;
   margin-bottom: 24px;
 }
 
@@ -289,6 +294,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  font-size: 20px;
 }
 
 .lxpg-single-acf-fields {
@@ -410,6 +416,31 @@
 /* Full-width fallback (no images) */
 .lxpg-single-full {
   max-width: 832px;
+}
+
+/* ── Inline content CTA ───────────────────────────────────────────────────── */
+.lxpg-content-cta {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.lxpg-content-cta-link {
+  display: inline-block;
+  background-color: var(--lxpg-content-cta-bg);
+  color: var(--lxpg-content-cta-color);
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: var(--lxpg-radius);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lxpg-content-cta-link:hover,
+.lxpg-content-cta-link:focus-visible {
+  background-color: var(--lxpg-content-cta-hover-bg);
+  color: var(--lxpg-content-cta-hover-color);
+  text-decoration: none;
 }
 
 /* ── CTA band ─────────────────────────────────────────────────────────────── */

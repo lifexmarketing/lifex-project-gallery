@@ -144,6 +144,51 @@ class LXPG_Settings {
                 ],
             ],
         ],
+        'content_cta' => [
+            'label'  => 'Inline CTA — Single Project Pages',
+            'fields' => [
+                'content_cta_enabled' => [
+                    'label'   => 'Enable Inline CTA',
+                    'type'    => 'checkbox',
+                    'default' => '',
+                ],
+                'content_cta_text' => [
+                    'label'   => 'Button Text',
+                    'type'    => 'text',
+                    'default' => 'Visit This Website',
+                ],
+                'content_cta_acf_field' => [
+                    'label'   => 'ACF Field for URL',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'ACF field name on the project post that holds the destination URL (e.g. project_website).',
+                ],
+                'content_cta_bg' => [
+                    'label'    => 'Button Background',
+                    'type'     => 'color',
+                    'default'  => '#1f2937',
+                    'property' => '--lxpg-content-cta-bg',
+                ],
+                'content_cta_color' => [
+                    'label'    => 'Button Text Color',
+                    'type'     => 'color',
+                    'default'  => '#ffffff',
+                    'property' => '--lxpg-content-cta-color',
+                ],
+                'content_cta_hover_bg' => [
+                    'label'    => 'Hover Background',
+                    'type'     => 'color',
+                    'default'  => '#374151',
+                    'property' => '--lxpg-content-cta-hover-bg',
+                ],
+                'content_cta_hover_color' => [
+                    'label'    => 'Hover Text Color',
+                    'type'     => 'color',
+                    'default'  => '#ffffff',
+                    'property' => '--lxpg-content-cta-hover-color',
+                ],
+            ],
+        ],
         'cta_content' => [
             'label'  => 'CTA Band Content — Single Project Pages',
             'fields' => [
@@ -314,6 +359,15 @@ class LXPG_Settings {
 
         switch ( $field['type'] ) {
 
+            case 'checkbox':
+                printf(
+                    '<input type="checkbox" name="%1$s" id="%2$s" value="1"%3$s>',
+                    esc_attr( $name ),
+                    esc_attr( $id ),
+                    checked( $value, '1', false )
+                );
+                break;
+
             case 'color':
                 printf(
                     '<input type="text" name="%1$s" id="%2$s" value="%3$s" class="lxpg-color-field" data-default-color="%4$s"%5$s>',
@@ -391,11 +445,12 @@ class LXPG_Settings {
                 $raw = $input[ $key ] ?? '';
 
                 $clean[ $key ] = match ( $field['type'] ) {
-                    'color'  => $this->sanitize_hex_color( $raw ),
-                    'rgba'   => $this->sanitize_rgba( $raw ),
-                    'select' => array_key_exists( $raw, $field['options'] ?? [] ) ? $raw : '',
-                    'page'   => absint( $raw ),
-                    default  => sanitize_text_field( $raw ),
+                    'color'    => $this->sanitize_hex_color( $raw ),
+                    'rgba'     => $this->sanitize_rgba( $raw ),
+                    'select'   => array_key_exists( $raw, $field['options'] ?? [] ) ? $raw : '',
+                    'page'     => absint( $raw ),
+                    'checkbox' => ( $raw === '1' ) ? '1' : '',
+                    default    => sanitize_text_field( $raw ),
                 };
             }
         }

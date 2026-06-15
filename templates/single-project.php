@@ -95,6 +95,19 @@ $cta_page_id    = (int) LXPG_Settings::get( 'cta_page_id', 0 );
 $cta_url        = $cta_page_id ? get_permalink( $cta_page_id ) : '';
 $cta_heading    = LXPG_Settings::get( 'cta_heading',     'Love This Project?' );
 $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
+
+// ── Inline content CTA ────────────────────────────────────────────────────────
+$content_cta_url = '';
+if ( LXPG_Settings::get( 'content_cta_enabled', '' ) === '1' && function_exists( 'get_field' ) ) {
+    $content_cta_field = LXPG_Settings::get( 'content_cta_acf_field', '' );
+    if ( $content_cta_field !== '' ) {
+        $raw_url = get_field( sanitize_key( $content_cta_field ), $post_id );
+        if ( is_string( $raw_url ) && $raw_url !== '' ) {
+            $content_cta_url = $raw_url;
+        }
+    }
+}
+$content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website' ) ?: 'Visit This Website';
 ?>
 
 <main class="lxpg-single" role="main">
@@ -149,6 +162,14 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
                 <div class="lxpg-single-content">
                     <?php the_content(); ?>
                 </div>
+
+                <?php if ( $content_cta_url ) : ?>
+                    <div class="lxpg-content-cta">
+                        <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
+                            <?php echo esc_html( $content_cta_text ); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
 
                 <?php if ( ! empty( $detail_rows ) ) : ?>
                 <ul class="lxpg-single-acf-fields">
@@ -235,6 +256,13 @@ $cta_btn        = LXPG_Settings::get( 'cta_button_text', 'Contact Us' );
                 <h2 class="lxpg-single-subtitle"><?php echo esc_html( $subtitle ); ?></h2>
             <?php endif; ?>
             <div class="lxpg-single-content"><?php the_content(); ?></div>
+            <?php if ( $content_cta_url ) : ?>
+                <div class="lxpg-content-cta">
+                    <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link" target="_blank" rel="noopener noreferrer">
+                        <?php echo esc_html( $content_cta_text ); ?>
+                    </a>
+                </div>
+            <?php endif; ?>
             <?php if ( ! empty( $detail_rows ) ) : ?>
             <ul class="lxpg-single-acf-fields">
                 <?php foreach ( $detail_rows as $row ) : ?>
