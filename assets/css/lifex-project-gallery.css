@@ -28,8 +28,10 @@
   --lxpg-btn-hover-bg:    #374151;
   --lxpg-cta-bg:          #1f2937;
   --lxpg-cta-text:        #ffffff;
-  --lxpg-cta-btn-bg:      #ffffff;
-  --lxpg-cta-btn-text:    #1f2937;
+  --lxpg-cta-btn-bg:          #ffffff;
+  --lxpg-cta-btn-text:        #1f2937;
+  --lxpg-cta-btn-hover-bg:    #e5e7eb;
+  --lxpg-cta-btn-hover-text:  #1f2937;
   --lxpg-lb-bg:           rgba(0, 0, 0, 0.92);
   --lxpg-lb-text:         #ffffff;
   --lxpg-content-cta-bg:          #1f2937;
@@ -481,14 +483,16 @@
   font-weight: 600;
   padding: 12px 32px;
   border-radius: var(--lxpg-radius);
-  transition: opacity 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .lxpg-cta-link:hover,
 .lxpg-cta-link:focus-visible {
-  opacity: 0.85;
+  background-color: var(--lxpg-cta-btn-hover-bg);
+  color: var(--lxpg-cta-btn-hover-text);
+  text-decoration: none;
 }
 
 .lxpg-cta-link:focus-visible {

@@ -243,6 +243,18 @@ class LXPG_Settings {
                     'default'  => '#1f2937',
                     'property' => '--lxpg-cta-btn-text',
                 ],
+                'css_cta_btn_hover_bg' => [
+                    'label'    => 'CTA Button Hover Background',
+                    'type'     => 'color',
+                    'default'  => '#e5e7eb',
+                    'property' => '--lxpg-cta-btn-hover-bg',
+                ],
+                'css_cta_btn_hover_text' => [
+                    'label'    => 'CTA Button Hover Text',
+                    'type'     => 'color',
+                    'default'  => '#1f2937',
+                    'property' => '--lxpg-cta-btn-hover-text',
+                ],
             ],
         ],
     ];

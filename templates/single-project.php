@@ -75,6 +75,8 @@ if ( $subtitle_template !== '' ) {
 
     if ( ! $any_resolved ) {
         $subtitle = '';
+    } else {
+        $subtitle = trim( preg_replace( '/\s+/', ' ', $subtitle ) );
     }
 }
 
