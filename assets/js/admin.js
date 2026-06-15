@@ -44,7 +44,7 @@
 			setProp( $( this ).attr( 'data-lxpg-prop' ), $( this ).val() );
 		} );
 
-		// Collapse inline-CTA fields when the enable checkbox is unchecked.
+		// Collapse inline-CTA fields and preview when the enable checkbox is unchecked.
 		const ctaCheckbox = document.getElementById( 'lxpg_content_cta_enabled' );
 		if ( ctaCheckbox ) {
 			const ctaRows = Array.from(
@@ -52,11 +52,16 @@
 			).filter( function ( row ) {
 				return ! row.contains( ctaCheckbox );
 			} );
+			const ctaPreview = document.getElementById( 'lxpg-content-cta-preview' );
 
 			function toggleCtaFields() {
+				const visible = ctaCheckbox.checked;
 				ctaRows.forEach( function ( row ) {
-					row.style.display = ctaCheckbox.checked ? '' : 'none';
+					row.style.display = visible ? '' : 'none';
 				} );
+				if ( ctaPreview ) {
+					ctaPreview.style.display = visible ? '' : 'none';
+				}
 			}
 
 			toggleCtaFields();

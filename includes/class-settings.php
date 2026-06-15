@@ -524,7 +524,7 @@ class LXPG_Settings {
         }
 
         // Sections that get a side preview and which renderer to use.
-        $previews = [ 'grid' => 'card', 'filters' => 'filter' ];
+        $previews = [ 'grid' => 'card', 'filters' => 'filter', 'content_cta' => 'content_cta_btn', 'cta_style' => 'cta' ];
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Project Gallery Settings', 'lifex-project-gallery' ); ?></h1>
@@ -553,6 +553,10 @@ class LXPG_Settings {
                             $this->render_card_preview( $pv );
                         } elseif ( $preview_type === 'filter' ) {
                             $this->render_filter_preview( $pv );
+                        } elseif ( $preview_type === 'content_cta_btn' ) {
+                            $this->render_content_cta_preview( $pv );
+                        } elseif ( $preview_type === 'cta' ) {
+                            $this->render_cta_preview( $pv );
                         }
                         ?>
                     </div>
@@ -614,6 +618,48 @@ class LXPG_Settings {
                     </div>
                     <div class="lxpg-filter-item" style="min-width:0;">
                         <button type="button" class="lxpg-filter-btn"><?php esc_html_e( 'Filter', 'lifex-project-gallery' ); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function render_content_cta_preview( string $pv ): void {
+        $enabled = self::get( 'content_cta_enabled', '' ) === '1';
+        ?>
+        <div id="lxpg-content-cta-preview" style="display:<?php echo $enabled ? 'block' : 'none'; ?>;">
+            <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
+                <?php esc_html_e( 'Inline CTA Preview', 'lifex-project-gallery' ); ?>
+            </p>
+            <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+                <div data-lxpg-preview style="<?php echo $pv; ?>;max-width:380px;">
+                    <div class="lxpg-content-cta">
+                        <a href="#" class="lxpg-content-cta-link" onclick="return false;">
+                            <?php echo esc_html( self::get( 'content_cta_text', 'Visit This Website' ) ?: 'Visit This Website' ); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function render_cta_preview( string $pv ): void {
+        ?>
+        <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
+            <?php esc_html_e( 'CTA Preview', 'lifex-project-gallery' ); ?>
+        </p>
+        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+            <div data-lxpg-preview style="<?php echo $pv; ?>;max-width:380px;">
+                <div class="lxpg-cta">
+                    <div class="lxpg-cta-inner">
+                        <div class="lxpg-cta-text">
+                            <span class="lxpg-cta-heading"><?php esc_html_e( 'Love This Project?', 'lifex-project-gallery' ); ?></span>
+                        </div>
+                        <a href="#" class="lxpg-cta-link" onclick="return false;">
+                            <?php esc_html_e( 'Contact Us', 'lifex-project-gallery' ); ?>
+                        </a>
                     </div>
                 </div>
             </div>
