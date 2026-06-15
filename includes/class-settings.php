@@ -519,7 +519,7 @@ class LXPG_Settings {
                 <h2><?php echo esc_html( $section['label'] ); ?></h2>
 
                 <?php if ( $preview_type ) : ?>
-                <div style="display:grid;grid-template-columns:2fr 1fr;gap:40px;align-items:start;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">
                     <div style="min-width:0;">
                 <?php endif; ?>
 
@@ -564,7 +564,7 @@ class LXPG_Settings {
         <p style="font-size:12px;font-weight:600;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:#50575e;">
             <?php esc_html_e( 'Card Preview', 'lifex-project-gallery' ); ?>
         </p>
-        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
+        <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;max-width: 200px;">
             <div data-lxpg-preview class="lxpg-gallery" style="<?php echo $pv; ?>">
                 <article class="lxpg-card">
                     <a href="#" class="lxpg-card-link" onclick="return false;">
@@ -586,7 +586,7 @@ class LXPG_Settings {
         </p>
         <div style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:3px;padding:16px;">
             <div data-lxpg-preview class="lxpg-gallery" style="<?php echo $pv; ?>">
-                <div class="lxpg-filters" style="flex-direction:column;">
+                <div class="lxpg-filters-preview" style="flex-direction:column;">
                     <div class="lxpg-filter-item" style="min-width:0;">
                         <select class="lxpg-filter-select">
                             <option><?php esc_html_e( 'Any Category', 'lifex-project-gallery' ); ?></option>
