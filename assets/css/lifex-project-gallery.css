@@ -557,6 +557,7 @@
 .lxpg-pagination-prev a:hover,
 .lxpg-pagination-next a:hover {
   text-decoration: underline;
+  color: #222;
 }
 
 @media (max-width: 640px) {

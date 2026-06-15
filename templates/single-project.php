@@ -343,6 +343,31 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
 
     </div><!-- .lxpg-single-inner -->
 
+    <?php
+    if ( LXPG_Settings::get( 'pagination_enabled', '' ) === '1' ) :
+        $prev_post = get_next_post();     // intentionally swapped: newest-first listing
+        $next_post = get_previous_post();
+        if ( $prev_post || $next_post ) :
+    ?>
+    <div class="lxpg-pagination">
+        <div class="lxpg-pagination-prev">
+            <?php if ( $prev_post ) : ?>
+                <a href="<?php echo esc_url( get_permalink( $prev_post->ID ) ); ?>">
+                    &lsaquo; <?php echo esc_html( $prev_post->post_title ); ?>
+                </a>
+            <?php endif; ?>
+        </div>
+        <div class="lxpg-pagination-next">
+            <?php if ( $next_post ) : ?>
+                <a href="<?php echo esc_url( get_permalink( $next_post->ID ) ); ?>">
+                    <?php echo esc_html( $next_post->post_title ); ?> &rsaquo;
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+    <?php endif; ?>
+
     <?php if ( $cta_url ) : ?>
     <div class="lxpg-cta">
         <div class="lxpg-cta-inner">
@@ -378,31 +403,6 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
             ></iframe>
         </div>
     </div>
-    <?php endif; ?>
-
-    <?php
-    if ( LXPG_Settings::get( 'pagination_enabled', '' ) === '1' ) :
-        $prev_post = get_next_post();     // intentionally swapped: newest-first listing
-        $next_post = get_previous_post();
-        if ( $prev_post || $next_post ) :
-    ?>
-    <div class="lxpg-pagination">
-        <div class="lxpg-pagination-prev">
-            <?php if ( $prev_post ) : ?>
-                <a href="<?php echo esc_url( get_permalink( $prev_post->ID ) ); ?>">
-                    &lsaquo; <?php echo esc_html( $prev_post->post_title ); ?>
-                </a>
-            <?php endif; ?>
-        </div>
-        <div class="lxpg-pagination-next">
-            <?php if ( $next_post ) : ?>
-                <a href="<?php echo esc_url( get_permalink( $next_post->ID ) ); ?>">
-                    <?php echo esc_html( $next_post->post_title ); ?> &rsaquo;
-                </a>
-            <?php endif; ?>
-        </div>
-    </div>
-    <?php endif; ?>
     <?php endif; ?>
 
 </main>
