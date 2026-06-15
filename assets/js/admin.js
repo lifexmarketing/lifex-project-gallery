@@ -84,5 +84,25 @@
 				linkTypeSelect.addEventListener( 'change', applyLinkType );
 			}
 		}
+
+		// Collapse schema fields when the enable checkbox is unchecked.
+		const schemaCheckbox = document.getElementById( 'lxpg_schema_enabled' );
+		if ( schemaCheckbox ) {
+			const schemaRows = Array.from(
+				schemaCheckbox.closest( 'table' ).querySelectorAll( 'tr' )
+			).filter( function ( row ) {
+				return ! row.contains( schemaCheckbox );
+			} );
+
+			function toggleSchemaFields() {
+				const visible = schemaCheckbox.checked;
+				schemaRows.forEach( function ( row ) {
+					row.style.display = visible ? '' : 'none';
+				} );
+			}
+
+			toggleSchemaFields();
+			schemaCheckbox.addEventListener( 'change', toggleSchemaFields );
+		}
 	} );
 } )( jQuery );

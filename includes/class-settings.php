@@ -285,6 +285,59 @@ class LXPG_Settings {
                 ],
             ],
         ],
+        'schema' => [
+            'label'  => 'Structured Data (JSON-LD)',
+            'fields' => [
+                'schema_enabled' => [
+                    'label'   => 'Enable Schema Markup',
+                    'type'    => 'checkbox',
+                    'default' => '',
+                    'hint'    => 'Adds a JSON-LD block to the page header of each single project page. Describes the project as a schema.org CreativeWork and helps search engines understand the content and entity relationships.',
+                ],
+                'schema_org_name' => [
+                    'label'   => 'Creator Organization Name',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'The name of the agency or organization that created the projects (e.g. LifeX Marketing). This value is the same on every project page.',
+                ],
+                'schema_org_url' => [
+                    'label'   => 'Creator Organization URL',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'Homepage URL of your organization (e.g. https://www.lifexmarketing.com/).',
+                ],
+                'schema_org_id' => [
+                    'label'   => 'Creator Organization @id',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'Schema @id for your organization — typically your homepage URL with an #organization fragment (e.g. https://www.lifexmarketing.com/#organization). Allows search engines to link this entity across multiple schema graphs on different pages.',
+                ],
+                'schema_client_name_field' => [
+                    'label'   => 'Client Name — ACF Field',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'ACF field name that holds the client organization name (e.g. client_name). In ACF, create a Text field on the Project post type with this name. Each project value becomes the name of its client entity in the schema.',
+                ],
+                'schema_client_url_field' => [
+                    'label'   => 'Client Website URL — ACF Field',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'ACF field name that holds the client website URL (e.g. client_website). Used as the client URL and to generate its unique schema @id.',
+                ],
+                'schema_client_description_field' => [
+                    'label'   => 'Client Description — ACF Field',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'ACF field name that holds a short description of the client (e.g. client_description). Optional — omitted from schema if the field is blank on a given project.',
+                ],
+                'schema_keywords_field' => [
+                    'label'   => 'Keywords — ACF Field',
+                    'type'    => 'text',
+                    'default' => '',
+                    'hint'    => 'ACF field name that holds comma-separated keywords for the project (e.g. project_keywords). Optional — omitted if the field is blank.',
+                ],
+            ],
+        ],
     ];
 
     // -------------------------------------------------------------------------
@@ -300,6 +353,54 @@ class LXPG_Settings {
     public static function get( string $key, mixed $default = '' ): mixed {
         $options = get_option( self::OPTION, [] );
         return $options[ $key ] ?? $default;
+    }
+
+    public static function compute_subtitle( int $post_id ): string {
+        $template = self::get( 'subtitle_template', '' );
+        if ( $template === '' ) {
+            return '';
+        }
+
+        $categories   = get_the_terms( $post_id, 'project_category' );
+        $any_resolved = false;
+
+        $result = preg_replace_callback(
+            '/\[([^\]]+)\]/',
+            function ( $matches ) use ( $post_id, $categories, &$any_resolved ) {
+                $token = trim( $matches[1] );
+
+                if ( $token === 'category' ) {
+                    if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+                        $any_resolved = true;
+                        return $categories[0]->name;
+                    }
+                    return '';
+                }
+
+                $terms = get_the_terms( $post_id, $token );
+                if ( $terms !== false && ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+                    $any_resolved = true;
+                    return $terms[0]->name;
+                }
+
+                if ( function_exists( 'get_field' ) ) {
+                    $value = get_field( $token, $post_id );
+                    if ( is_scalar( $value ) && $value !== '' && $value !== false ) {
+                        $any_resolved = true;
+                        return (string) $value;
+                    }
+                }
+
+                return '';
+            },
+            $template
+        );
+
+        if ( ! $any_resolved ) {
+            return '';
+        }
+
+        return trim( preg_replace( '/\s+/', ' ', $result ) );
     }
 
     // ── Admin assets ──────────────────────────────────────────────────────────

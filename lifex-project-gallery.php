@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LXPG_VERSION', '2.0.3' );
+define( 'LXPG_VERSION', '2.0.4' );
 define( 'LXPG_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'LXPG_URL',     plugins_url( '/', __FILE__ ) );
 define( 'LXPG_FILE',    __FILE__ );
@@ -23,6 +23,7 @@ require_once LXPG_DIR . 'includes/class-settings.php';
 require_once LXPG_DIR . 'includes/class-assets.php';
 require_once LXPG_DIR . 'includes/class-shortcode.php';
 require_once LXPG_DIR . 'includes/class-single-template.php';
+require_once LXPG_DIR . 'includes/class-schema.php';
 
 add_action( 'plugins_loaded', function (): void {
     new LXPG_Post_Type();
@@ -30,6 +31,7 @@ add_action( 'plugins_loaded', function (): void {
     new LXPG_Assets();
     new LXPG_Shortcode();
     new LXPG_Single_Template();
+    new LXPG_Schema();
 } );
 
 register_activation_hook( __FILE__, function (): void {
