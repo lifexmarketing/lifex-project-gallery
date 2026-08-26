@@ -115,7 +115,7 @@ class LXPG_ACF_Setup {
         return [
             'key'           => 'field_lxpg_project_testimonial',
             'label'         => 'Linked Testimonial',
-            'name'          => 'project-testimonial',
+            'name'          => 'project_testimonial',
             'type'          => 'post_object',
             'instructions'  => 'Optional. Select a Strong Testimonials entry to display as a client review on this project.',
             'required'      => 0,
@@ -136,7 +136,7 @@ class LXPG_ACF_Setup {
     public function get_standard_field_names(): array {
         $names = array_column( $this->get_base_fields(), 'name' );
         if ( post_type_exists( 'wpm-testimonial' ) ) {
-            $names[] = 'project-testimonial';
+            $names[] = 'project_testimonial';
         }
         return $names;
     }

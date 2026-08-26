@@ -87,7 +87,7 @@ class LXPG_Schema {
 
         // ── Review (from the optional client testimonial addon) ─────────────────
         if ( LXPG_Settings::get( 'testimonial_enabled', '' ) === '1' && function_exists( 'get_field' ) && post_type_exists( 'wpm-testimonial' ) ) {
-            $testimonial_id = get_field( 'project-testimonial', $post_id );
+            $testimonial_id = get_field( 'project_testimonial', $post_id );
 
             if ( $testimonial_id ) {
                 $testimonial_content = get_post_field( 'post_content', $testimonial_id );

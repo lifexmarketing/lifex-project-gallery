@@ -230,7 +230,7 @@ class LXPG_Settings {
                     'label'   => 'Enable Client Testimonial',
                     'type'    => 'checkbox',
                     'default' => '',
-                    'hint'    => 'Shows a testimonial pulled from the "project-testimonial" ACF field (a relationship to a Strong Testimonials entry) when one is linked to the project.',
+                    'hint'    => 'Shows a testimonial pulled from the "project_testimonial" ACF field (a relationship to a Strong Testimonials entry) when one is linked to the project.',
                 ],
                 'testimonial_heading' => [
                     'label'   => 'Heading',
