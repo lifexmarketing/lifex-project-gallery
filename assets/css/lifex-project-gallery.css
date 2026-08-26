@@ -179,7 +179,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: var(--lxpg-card-ratio);
-  background-color: #e5e7eb;
+  background-color: transparent;
 }
 
 .lxpg-card-image {

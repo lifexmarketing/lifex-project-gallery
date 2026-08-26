@@ -88,7 +88,7 @@
   }
 
   .lxpg-card-image-wrap {
-    @apply relative overflow-hidden bg-gray-200;
+    @apply relative overflow-hidden bg-transparent;
     aspect-ratio: var(--lxpg-card-ratio);
   }
 
