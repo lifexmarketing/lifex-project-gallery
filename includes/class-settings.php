@@ -223,6 +223,46 @@ class LXPG_Settings {
                 ],
             ],
         ],
+        'testimonial' => [
+            'label'  => 'Client Testimonial — Single Project Pages',
+            'fields' => [
+                'testimonial_enabled' => [
+                    'label'   => 'Enable Client Testimonial',
+                    'type'    => 'checkbox',
+                    'default' => '',
+                    'hint'    => 'Shows a testimonial pulled from the "project-testimonial" ACF field (a relationship to a Strong Testimonials entry) when one is linked to the project.',
+                ],
+                'testimonial_heading' => [
+                    'label'   => 'Heading',
+                    'type'    => 'text',
+                    'default' => 'Client Testimonial',
+                ],
+                'css_testimonial_bg' => [
+                    'label'    => 'Background',
+                    'type'     => 'color',
+                    'default'  => '#f9f9f9',
+                    'property' => '--lxpg-testimonial-bg',
+                ],
+                'css_testimonial_border' => [
+                    'label'    => 'Border Color',
+                    'type'     => 'color',
+                    'default'  => '#333333',
+                    'property' => '--lxpg-testimonial-border',
+                ],
+                'css_testimonial_star_color' => [
+                    'label'    => 'Star Rating — Filled',
+                    'type'     => 'color',
+                    'default'  => '#ffa500',
+                    'property' => '--lxpg-testimonial-star-color',
+                ],
+                'css_testimonial_star_empty_color' => [
+                    'label'    => 'Star Rating — Empty',
+                    'type'     => 'color',
+                    'default'  => '#dddddd',
+                    'property' => '--lxpg-testimonial-star-empty-color',
+                ],
+            ],
+        ],
         'cta_content' => [
             'label'  => 'CTA Band Content — Single Project Pages',
             'fields' => [

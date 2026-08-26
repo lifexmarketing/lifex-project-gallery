@@ -38,6 +38,10 @@
   --lxpg-content-cta-color:       #ffffff;
   --lxpg-content-cta-hover-bg:    #374151;
   --lxpg-content-cta-hover-color: #ffffff;
+  --lxpg-testimonial-bg:               #f9f9f9;
+  --lxpg-testimonial-border:           #333333;
+  --lxpg-testimonial-star-color:       #ffa500;
+  --lxpg-testimonial-star-empty-color: #dddddd;
 }
 
 /* ── Accessibility utilities ─────────────────────────────────────────────── */
@@ -443,6 +447,44 @@
   background-color: var(--lxpg-content-cta-hover-bg);
   color: var(--lxpg-content-cta-hover-color);
   text-decoration: none;
+}
+
+/* ── Client testimonial ───────────────────────────────────────────────────── */
+.lxpg-testimonial {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background-color: var(--lxpg-testimonial-bg);
+  border-left: 4px solid var(--lxpg-testimonial-border);
+}
+
+.lxpg-testimonial-heading {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.lxpg-testimonial-rating {
+  margin-bottom: 10px;
+}
+
+.lxpg-testimonial-star {
+  font-size: 18px;
+  color: var(--lxpg-testimonial-star-empty-color);
+}
+
+.lxpg-testimonial-star.is-filled {
+  color: var(--lxpg-testimonial-star-color);
+}
+
+.lxpg-testimonial-content {
+  font-style: italic;
+  margin: 15px 0;
+}
+
+.lxpg-testimonial-attribution {
+  font-weight: 700;
+  margin: 15px 0 0;
 }
 
 /* ── CTA band ─────────────────────────────────────────────────────────────── */

@@ -117,6 +117,27 @@ if ( LXPG_Settings::get( 'content_cta_enabled', '' ) === '1' ) {
     }
 }
 $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website' ) ?: 'Visit This Website';
+
+// ── Client testimonial (optional addon) ────────────────────────────────────────
+$testimonial = null;
+if ( LXPG_Settings::get( 'testimonial_enabled', '' ) === '1' && function_exists( 'get_field' ) && post_type_exists( 'wpm-testimonial' ) ) {
+    $testimonial_id = get_field( 'project-testimonial', $post_id );
+
+    if ( $testimonial_id ) {
+        $testimonial_content = get_post_field( 'post_content', $testimonial_id );
+        $testimonial_title   = get_the_title( $testimonial_id );
+
+        if ( $testimonial_content || $testimonial_title ) {
+            // Strong Testimonials stores its data in post meta on the testimonial post.
+            $testimonial = [
+                'content' => $testimonial_content,
+                'rating'  => (int) get_post_meta( $testimonial_id, 'star_rating', true ),
+                'client'  => get_post_meta( $testimonial_id, 'client_name', true ),
+                'company' => get_post_meta( $testimonial_id, 'company_name', true ),
+            ];
+        }
+    }
+}
 ?>
 
 <main class="lxpg-single" role="main">
@@ -197,6 +218,10 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
                         <li><strong><?php esc_html_e( 'Price Range:', 'lifex-project-gallery' ); ?></strong> $<?php echo $price_min; ?> &ndash; $<?php echo $price_max; ?></li>
                     <?php endif; ?>
                 </ul>
+
+                <?php if ( $testimonial ) : ?>
+                    <?php include LXPG_DIR . 'templates/partials/testimonial.php'; ?>
+                <?php endif; ?>
 
                 <?php if ( $content_cta_url ) : ?>
                     <div class="lxpg-content-cta">
@@ -283,6 +308,9 @@ $content_cta_text = LXPG_Settings::get( 'content_cta_text', 'Visit This Website'
                     <li><strong><?php esc_html_e( 'Price Range:', 'lifex-project-gallery' ); ?></strong> $<?php echo $price_min; ?> &ndash; $<?php echo $price_max; ?></li>
                 <?php endif; ?>
             </ul>
+            <?php if ( $testimonial ) : ?>
+                <?php include LXPG_DIR . 'templates/partials/testimonial.php'; ?>
+            <?php endif; ?>
             <?php if ( $content_cta_url ) : ?>
                 <div class="lxpg-content-cta">
                     <a href="<?php echo esc_url( $content_cta_url ); ?>" class="lxpg-content-cta-link"<?php if ( $content_cta_target ) echo ' target="' . esc_attr( $content_cta_target ) . '" rel="' . esc_attr( $content_cta_rel ) . '"'; ?>>

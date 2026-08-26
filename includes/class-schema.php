@@ -85,6 +85,51 @@ class LXPG_Schema {
             $creative_work['mainEntity'] = $ref;
         }
 
+        // ── Review (from the optional client testimonial addon) ─────────────────
+        if ( LXPG_Settings::get( 'testimonial_enabled', '' ) === '1' && function_exists( 'get_field' ) && post_type_exists( 'wpm-testimonial' ) ) {
+            $testimonial_id = get_field( 'project-testimonial', $post_id );
+
+            if ( $testimonial_id ) {
+                $testimonial_content = get_post_field( 'post_content', $testimonial_id );
+                $testimonial_title   = get_the_title( $testimonial_id );
+
+                if ( $testimonial_content || $testimonial_title ) {
+                    $testimonial_rating  = (int) get_post_meta( $testimonial_id, 'star_rating', true );
+                    $testimonial_client  = get_post_meta( $testimonial_id, 'client_name', true );
+                    $testimonial_company = get_post_meta( $testimonial_id, 'company_name', true );
+
+                    $review = [ '@type' => 'Review' ];
+
+                    if ( $testimonial_content !== '' ) {
+                        $review['reviewBody'] = wp_strip_all_tags( $testimonial_content );
+                    }
+
+                    if ( $testimonial_client !== '' || $testimonial_company !== '' ) {
+                        if ( $testimonial_client !== '' ) {
+                            $author = [ '@type' => 'Person', 'name' => $testimonial_client ];
+                            if ( $testimonial_company !== '' ) {
+                                $author['worksFor'] = [ '@type' => 'Organization', 'name' => $testimonial_company ];
+                            }
+                        } else {
+                            $author = [ '@type' => 'Organization', 'name' => $testimonial_company ];
+                        }
+                        $review['author'] = $author;
+                    }
+
+                    if ( $testimonial_rating >= 1 && $testimonial_rating <= 5 ) {
+                        $review['reviewRating'] = [
+                            '@type'       => 'Rating',
+                            'ratingValue' => $testimonial_rating,
+                            'bestRating'  => 5,
+                            'worstRating' => 1,
+                        ];
+                    }
+
+                    $creative_work['review'] = $review;
+                }
+            }
+        }
+
         // ── Graph ─────────────────────────────────────────────────────────────
         $graph = [ $creative_work ];
 

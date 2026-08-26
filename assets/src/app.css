@@ -41,6 +41,10 @@
     --lxpg-share-hover-bg:  #1f2937;
     --lxpg-lb-bg:           rgba(0, 0, 0, 0.92);
     --lxpg-lb-text:         #ffffff;
+    --lxpg-testimonial-bg:               #f9f9f9;
+    --lxpg-testimonial-border:           #333333;
+    --lxpg-testimonial-star-color:       #ffa500;
+    --lxpg-testimonial-star-empty-color: #dddddd;
   }
 }
 
@@ -119,5 +123,38 @@
   .lxpg-card-link:hover .lxpg-card-meta,
   .lxpg-card-link:focus-visible .lxpg-card-meta {
     @apply opacity-100 translate-y-0;
+  }
+
+  /* Client testimonial */
+  .lxpg-testimonial {
+    @apply mt-6 mb-6 p-5;
+    background-color: var(--lxpg-testimonial-bg);
+    border-left: 4px solid var(--lxpg-testimonial-border);
+  }
+
+  .lxpg-testimonial-heading {
+    @apply mb-2.5 text-xl font-bold;
+    margin-top: 0;
+  }
+
+  .lxpg-testimonial-rating {
+    @apply mb-2.5;
+  }
+
+  .lxpg-testimonial-star {
+    @apply text-lg;
+    color: var(--lxpg-testimonial-star-empty-color);
+  }
+
+  .lxpg-testimonial-star.is-filled {
+    color: var(--lxpg-testimonial-star-color);
+  }
+
+  .lxpg-testimonial-content {
+    @apply italic my-4;
+  }
+
+  .lxpg-testimonial-attribution {
+    @apply font-bold mt-4;
   }
 }
