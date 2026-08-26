@@ -697,6 +697,9 @@ class LXPG_Settings {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Project Gallery Settings', 'lifex-project-gallery' ); ?></h1>
+
+            <?php ( new LXPG_ACF_Setup() )->render_panel(); ?>
+
             <form method="post" action="options.php">
                 <?php settings_fields( 'lxpg_settings_group' ); ?>
 
