@@ -368,9 +368,9 @@ if ( LXPG_Settings::get( 'testimonial_enabled', '' ) === '1' && function_exists(
     <div class="lxpg-map-wrap">
         <div class="lxpg-map-inner">
             <?php if ( $city || $state ) : ?>
-                <p class="lxpg-map-location">
+                <h3 class="lxpg-map-location">
                     <?php echo trim( $city . ( $city && $state ? ', ' : '' ) . $state . ( $zip ? ' ' . $zip : '' ) ); ?>
-                </p>
+                </h3>
             <?php endif; ?>
             <iframe
                 class="lxpg-map"
