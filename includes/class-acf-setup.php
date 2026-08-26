@@ -197,7 +197,7 @@ class LXPG_ACF_Setup {
         }
         check_admin_referer( 'lxpg_generate_fields' );
 
-        $redirect = admin_url( 'options-general.php?page=lifex-project-gallery' );
+        $redirect = admin_url( 'edit.php?post_type=project&page=lifex-project-gallery' );
 
         if ( ! function_exists( 'acf_import_field_group' ) ) {
             wp_safe_redirect( add_query_arg( 'lxpg_acf_notice', 'no_acf', $redirect ) );
@@ -216,7 +216,7 @@ class LXPG_ACF_Setup {
         }
         check_admin_referer( 'lxpg_import_fields' );
 
-        $redirect = admin_url( 'options-general.php?page=lifex-project-gallery' );
+        $redirect = admin_url( 'edit.php?post_type=project&page=lifex-project-gallery' );
 
         if ( ! function_exists( 'acf_import_field_group' ) ) {
             wp_safe_redirect( add_query_arg( 'lxpg_acf_notice', 'no_acf', $redirect ) );

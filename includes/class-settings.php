@@ -446,7 +446,7 @@ class LXPG_Settings {
     // ── Admin assets ──────────────────────────────────────────────────────────
 
     public function enqueue_admin_assets( string $hook ): void {
-        if ( $hook !== 'settings_page_lifex-project-gallery' ) {
+        if ( $hook !== 'project_page_lifex-project-gallery' ) {
             return;
         }
 
@@ -497,9 +497,10 @@ class LXPG_Settings {
     // ── Settings registration ─────────────────────────────────────────────────
 
     public function add_settings_page(): void {
-        add_options_page(
+        add_submenu_page(
+            'edit.php?post_type=project',
             __( 'Project Gallery Settings', 'lifex-project-gallery' ),
-            __( 'Project Gallery',           'lifex-project-gallery' ),
+            __( 'Settings',                  'lifex-project-gallery' ),
             'manage_options',
             'lifex-project-gallery',
             [ $this, 'render_settings_page' ]
@@ -840,7 +841,7 @@ class LXPG_Settings {
     }
 
     public function add_action_link( array $links ): array {
-        $url = admin_url( 'options-general.php?page=lifex-project-gallery' );
+        $url = admin_url( 'edit.php?post_type=project&page=lifex-project-gallery' );
         array_unshift( $links, '<a href="' . esc_url( $url ) . '">' . __( 'Settings', 'lifex-project-gallery' ) . '</a>' );
         return $links;
     }

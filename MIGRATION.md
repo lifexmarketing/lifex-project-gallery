@@ -124,7 +124,7 @@ This is required because the post type rewrite is re-registered by the new plugi
 
 ### 5. Configure the CTA section
 
-Go to **Settings > Project Gallery** and set the contact page, CTA heading, and button text.
+Go to **Project Gallery > Settings** and set the contact page, CTA heading, and button text.
 The default values mirror the old template text.
 
 ### 6. Replace shortcodes in content

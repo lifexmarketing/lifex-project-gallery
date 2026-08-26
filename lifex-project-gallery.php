@@ -3,7 +3,7 @@
  * Plugin Name: LifeX Project Gallery
  * Plugin URI:  https://github.com/lifexmarketing/lifex-project-gallery
  * Description: A modern, accessible project gallery with a flexible shortcode and conditional asset loading.
- * Version:     2.1.1
+ * Version:     2.1.2
  * Author:      LifeX Marketing
  * Author URI:  https://lifexmarketing.com
  * Text Domain: lifex-project-gallery
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LXPG_VERSION', '2.1.1' );
+define( 'LXPG_VERSION', '2.1.2' );
 define( 'LXPG_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'LXPG_URL',     plugins_url( '/', __FILE__ ) );
 define( 'LXPG_FILE',    __FILE__ );
